@@ -8,7 +8,7 @@ catalog:	true
 tags:	技术 Redis CentOS
 ---
 
-> “这就是我，一个低调的做者。”
+> “这就是我，一个低调的作者。”
 
 
 

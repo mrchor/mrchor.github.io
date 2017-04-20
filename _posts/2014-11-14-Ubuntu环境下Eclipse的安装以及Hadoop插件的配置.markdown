@@ -9,6 +9,8 @@ tags: Hadoop Ubuntu Eclipse Hadoop插件
 grammar_cjkRuby: true
 ---
 
+> “这就是我，一个低调的作者。”
+
 
 ## 一、eclipse的安装
 

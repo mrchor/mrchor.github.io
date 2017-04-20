@@ -8,7 +8,7 @@ catalog:	true
 tags:	技术 Eclipse Hadoop插件
 ---
 
-> “这就是我，一个低调的做者。”
+> “这就是我，一个低调的作者。”
 
 
 

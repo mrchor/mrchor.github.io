@@ -9,6 +9,8 @@ tags: Hadoop
 grammar_cjkRuby: true
 ---
 
+> “这就是我，一个低调的作者。”
+
 
 ### 一、ssh的启动
 	ssh localhost

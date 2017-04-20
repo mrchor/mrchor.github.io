@@ -8,7 +8,7 @@ catalog:	true
 tags:	lrzsz CentOS7
 ---
 
-> “这就是我，一个低调的学者。”
+> “这就是我，一个低调的作者。”
 
 
 
