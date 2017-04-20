@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "linux小技巧"
+title:      "HDFS的java接口-简化HDFS文件系统操作"
 date:       2015-07-16 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
