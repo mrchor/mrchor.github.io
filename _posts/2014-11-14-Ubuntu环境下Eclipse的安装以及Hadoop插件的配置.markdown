@@ -1,14 +1,13 @@
 ---
 layout:     post
-title:      "Ubuntu下的Hadoop搭建"
-date:       2014-11-13 12:00:00
+title:      "Ubuntu环境下Eclipse的安装以及Hadoop插件的配置"
+date:       2014-11-14 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
-tags:	技术 Hadoop Eclipse
+tags: Hadoop
+grammar_cjkRuby: true
 ---
-
-> “这就是我，一个低调的学者。”
 
 
 ## 一、eclipse的安装
@@ -72,4 +71,3 @@ tags:	技术 Hadoop Eclipse
 ![](http://images.cnitblog.com/blog/656602/201411/141638274287629.jpg)
 
 至此，eclipse安装完毕，且hadoop插件安装完毕。
-
