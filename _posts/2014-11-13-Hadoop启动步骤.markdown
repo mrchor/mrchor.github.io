@@ -1,0 +1,23 @@
+---
+layout:     post
+title:      "Hadoop启动步骤"
+date:       2014-11-13 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags: Hadoop
+grammar_cjkRuby: true
+---
+
+
+### 一、ssh的启动
+	ssh localhost
+
+### 二、hadoop的HDFS的格式化
+	bin/hadoop namenode -format
+
+### 四、hadoop的datanode的启动
+	bin/hadoop-daemon.sh start datanode
+
+### 五、hadoop的tasktracker的启动
+	bin/hadoop-daemon.sh start tasktracker
