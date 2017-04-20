@@ -5,7 +5,7 @@ date:       2014-11-14 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
-tags: Hadoop
+tags: Hadoop Ubuntu Eclipse Hadoop插件
 grammar_cjkRuby: true
 ---
 
