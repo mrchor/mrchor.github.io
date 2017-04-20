@@ -1,15 +1,16 @@
 ---
 layout:     post
-title:      "ÎÒµÄ²©¿ÍÕ¾¿ªÍ¨ÁË"
-subtitle:   " \"ÎÒµÄµÚÒ»¸ö²©¿Í\""
-date:       2015-04-20 12:00:00
+title:      "Ubuntuä¸‹çš„Hadoopæ­å»º"
+subtitle:   "\"ä¼ªåˆ†å¸ƒå¼\""
+date:       2014-11-13 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
-catalog: true
+catalog:	true
 tags:
-    - Éú»î
+    - æŠ€æœ¯
+    - Hadoop
 ---
 
-> ¡°Õâ¾ÍÊÇÎÒ£¬Ò»¸öµÍµ÷µÄÑ§Õß¡£¡±
+> â€œè¿™å°±æ˜¯æˆ‘ï¼Œä¸€ä¸ªä½Žè°ƒçš„å­¦è€…ã€‚â€
 
-ÄÚÈÝ
+å†…å®¹

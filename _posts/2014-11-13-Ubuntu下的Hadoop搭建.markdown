@@ -7,8 +7,8 @@ author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
 tags:
-    - 第一个博客
-    - 生活
+    - 技术
+    - Hadoop
 ---
 
 > “这就是我，一个低调的学者。”
