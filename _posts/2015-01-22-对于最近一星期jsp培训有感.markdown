@@ -1,17 +1,17 @@
 ---
 layout:     post
-title:      "Ubuntu下的Hadoop搭建"
-subtitle:   "\"伪分布式\""
-date:       2014-11-13 12:00:00
+title:      "对于最近一星期jsp培训有感"
+subtitle:   "\"忙碌着的才是生活的意义\""
+date:       2015-01-22 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
-tags:
-    - 技术
-    - Hadoop
+tags:	jsp
 ---
 
 > “这就是我，一个低调的学者。”
+
+
 
 　　这周上课是jsp的培训，找的是外面的一个培训机构的讲师，人挺好的，讲的也不错，不过交给我们的任务是一星期做出一个网站模型——新闻发布系统。
 
