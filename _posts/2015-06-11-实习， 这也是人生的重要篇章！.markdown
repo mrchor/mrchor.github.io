@@ -1,0 +1,15 @@
+---
+layout:     post
+title:      "实习， 这也是人生的重要篇章！"
+date:       2015-06-11 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	生活
+---
+
+> “这就是我，一个低调的做者。”
+
+
+
+今天第一天实习，感觉还不错，带我的技术主管是个女的，人很好，对我也不错。加油，加油！

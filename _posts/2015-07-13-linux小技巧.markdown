@@ -1,0 +1,17 @@
+---
+layout:     post
+title:      "linux小技巧"
+date:       2015-07-13 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	技术 Linux
+---
+
+> “这就是我，一个低调的做者。”
+
+
+
+1、删除目录下制定大小的文件
+
+　　find . -name "*" -type f -size #文件的大小#c | xargs -n 1 rm -f

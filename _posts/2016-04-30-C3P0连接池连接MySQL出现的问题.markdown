@@ -1,0 +1,24 @@
+---
+layout:     post
+title:      "C3P0连接池连接MySQL出现的问题"
+date:       2016-04-30 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	技术 C3P0 MySQL
+---
+
+> “这就是我，一个低调的做者。”
+
+
+
+1、Clearing pending acquires. While trying to acquire a needed new resource, we failed to succeed more than the maximum number of allowed acquisition attempts (30). Last acquisition attempt exception:
+
+  没发现所配置的数据库名字，使用默认的，然后一直连接，最后异常
+
+　　一直在百度这个问题，但是没有什么好的解决方案，最后发现，我天呐！！！resource文件夹不是源文件夹，我勒个去，终解决了。。
+
+　　解决此问题的可能原因：
+  1）存放c3p0-confgi.xml的文件夹不是源文件夹；
+  
+  2）看看你的c3p0配置文件确定不是c3p0-server.xml？

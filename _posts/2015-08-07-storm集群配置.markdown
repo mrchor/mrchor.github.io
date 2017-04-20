@@ -1,0 +1,206 @@
+---
+layout:     post
+title:      "storm集群配置"
+date:       2015-08-07 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	技术 Storm ApacheStorm
+---
+
+> “这就是我，一个低调的做者。”
+
+
+
+1. 安装配置zookeeper
+
+Storm使用Zookeeper协调集群，由于Zookeeper并不用于消息传递，所以Storm给Zookeeper带来的压力相当低。对于Zookeeper集群的话，官方推荐的最小节点数为3个。
+在Zookeeper集群的每台机器上完成以下安装部署步骤:
+ 
+1、下载zookeeper
+本系统使用的是 [zookeeper-3.4.6](http://mirrors.cnnic.cn/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz)
+ 
+2、解压
+
+	tar -xf zookeeper-3.4.6.tar.gz
+	
+将解压后的zookeeper-3.4.6文件放在系统的/home/storm/中。
+
+3、将zookeeper-3.4.6/conf目录下的zoo_sample.cfg文件拷贝一份，命名为为“zoo.cfg”
+
+4、修改zoo.cfg配置文件
+修改zoo.cfg内容为：
+
+	# The number of milliseconds of each tick
+	tickTime=2000
+	# The number of ticks that the initial 
+	# synchronization phase can take
+	initLimit=10
+	# The number of ticks that can pass between 
+	# sending a request and getting an acknowledgement
+	syncLimit=5
+	# the directory where the snapshot is stored.
+	# do not use /tmp for storage, /tmp here is just 
+	# example sakes.
+	dataDir=/home/storm/zookeeper-3.4.3/zookeeperdir/zookeeper-data
+	dataLogDir=/home/storm/zookeeper-3.4.3/zookeeperdir/logs
+
+	# the port at which the clients will connect
+	clientPort=2181
+	#
+	# Be sure to read the maintenance section of the 
+	# administrator guide before turning on autopurge.
+	#
+	# http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
+	#
+	# The number of snapshots to retain in dataDir
+	#autopurge.snapRetainCount=3
+	# Purge task interval in hours
+	# Set to "0" to disable auto purge feature
+	#autopurge.purgeInterval=1
+
+	# 2888,3888 are election port
+	server.1=zookeeper:2888:3888
+	
+其中，2888端口号是zookeeper服务之间通信的端口，而3888是zookeeper与其他应用程序通信的端口。
+而zookeeper是在hosts中已映射了本机的ip。
+initLimit：这个配置项是用来配置 Zookeeper 接受客户端（这里所说的客户端不是用户连接 Zookeeper服务器的客户端，而是 Zookeeper 服务器集群中连接到 Leader 的 Follower 服务器）初始化连接时最长能忍受多少个心跳时间间隔数。当已经超过 10 个心跳的时间（也就是 tickTime）长度后 Zookeeper 服务器还没有收到客户端的返回信息，那么表明这个客户端连接失败。总的时间长度就是 5\*2000=10 秒。
+syncLimit：这个配置项标识 Leader 与 Follower 之间发送消息，请求和应答时间长度，最长不能超过多少个 tickTime 的时间长度，总的时间长度就是 2\*2000=4 秒。
+server.A=B：C：D：其中 A 是一个数字，表示这个是第几号服务器；B 是这个服务器的 ip 地址；C 表示的是这个服务器与集群中的 Leader 服务器交换信息的端口；D 表示的是万一集群中的 Leader 服务器挂了，需要一个端口来重新进行选举，选出一个新的 Leader，而这个端口就是用来执行选举时服务器相互通信的端口。如果是伪集群的配置方式，由于 B 都是一样，所以不同的 Zookeeper 实例通信端口号不能一样，所以要给它们分配不同的端口号。
+
+	# The number of milliseconds of each tick
+	tickTime=2000
+	# The number of ticks that the initial
+	# synchronization phase can take
+	initLimit=10
+	# The number of ticks that can pass between
+	# sending a request and getting an acknowledgement
+	syncLimit=5
+	# the directory where the snapshot is stored.
+	dataDir=/home/storm/zookeeper/data
+	# the port at which the clients will connect
+	clientPort=2181
+	server.1=192.168.1.222:2888:3888
+	server.2=192.168.1.223:2888:3888
+	server.3=192.168.1.224:2888:3888
+	
+5、创建dataDir参数指定的目录/home/storm/zookeeper/data
+并在该目录下创建文件，命名为“myid”的文件。
+ 
+6、编辑“myid”文件，并在对应的IP的机器上输入对应的编号。如在zookeeper上，“myid”文件内容就是1。由于本次只在单点上进行安装配置，所以只有一个server.1。若还有其他服务器，比如地址为192.168.1.102，则在zoo.cfg文件中还需加入server.2=192.168.1.102:2888:3888。那么myid文件在192.168.1.102服务器上的内容就是2。
+至此，如果是多服务器配置，就需要将zookeeper-3.4.6目录拷贝到其他服务器，然后按照上述的方法修改myid。
+
+7、在/etc/profile文件中设置PATH
+修改profile文件：
+
+	sudo vi /etc/profile
+	
+	export ZOOKEEPER_HOME=/home/storm/zookeeper-3.4.6
+	PATH=$ZOOKEEPER_HOME/bin:$PATH
+	export PATH
+	
+8、安装完毕
+
+9、启动
+ 1、在所有服务器中执行：
+ 
+	zookeeper-3.4.6/bin/zkServer.sh start
+	
+注意：需要每个节点都运行上述命令！
+
+ 2、输入jps命令查看进程：
+namenode上显示为
+19361 QuorumPeerMain
+其中，QuorumPeerMain是zookeeper进程，启动正常。（HMaster和HRegionServer为已启动的hbase进程，其他为安装hadoop后启动的进程）
+
+ 3、查看状态：zookeeper-3.4.6/bin/zkServer.sh status
+JMX enabled by default
+Using config: /home/storm/zookeeper-3.4.6/bin/../conf/zoo.cfg
+Mode: follwer
+
+2. 安装Storm 依赖库
+
+2.1 安装zeromq (http://zeromq.org/area:download)
+
+安装之前，请先安装[util-linux-2.21.1.tar.gz](https://www.kernel.org/pub/linux/utils/util-linux/v2.21/util-linux-2.21.1.tar.gz)
+
+	tar xvf zeromq-2.1.7.tar.gz
+	cd zeromq-2.1.7
+	./configure
+	make
+	sudo make install
+	
+2.2 安装 jzmq(https://github.com/nathanmarz/jzmq)
+
+	unzip jzmq-master.zip
+	cd jzmq-master
+	./autogen.sh
+	./configure
+	make
+	sudo make install
+	
+安装时，可能碰到两个错误：
+
+(1).make[1]: \*\*\* 没有规则可以创建“org/zeromq/ZMQ.class”需要的目标“classdist_noinst.stamp”。 停止修正方法，创建classdist_noinst.stamp文件：
+　　　　　　touch src/classdist_noinst.stamp  
+(2).错误：无法访问 org.zeromq.ZMQ修正方法，进入src目录，手动编译相关java代码：
+　　　　　　javac ./src/org/zeromq/*.java 
+	
+3. 安装Storm 
+
+	tar xvf storm-0.9.5.tar.gz
+	 cd storm-0.9.5
+	 
+修改配置文件 conf/storm.yaml
+
+	storm.zookeeper.servers:
+		 - "192.168.1.222"
+		 - "192.168.1.223"
+		 - "192.168.1.224"
+		 - "192.168.1.225"
+	 nimbus.host: "192.168.2.222"
+	 ui.port:  9090
+	# 
+	#
+	# ##### These may optionally be filled in:
+	#    
+	## List of custom serializations
+	# topology.kryo.register:
+	#     - org.mycompany.MyType
+	#     - org.mycompany.MyType2: org.mycompany.MyType2Serializer
+	#
+	## List of custom kryo decorators
+	# topology.kryo.decorators:
+	#     - org.mycompany.MyDecorator
+	#
+	## Locations of the drpc servers
+	# drpc.servers:
+	#     - "server1"
+	#     - "server2"
+	#
+	 storm.local.dir: "/home/storm/storm_workdir"
+	 java.library.path: "/usr/local/lib:/usr/lib"
+	 
+启动 storm 
+
+  主节点
+  
+	storm nimbus &
+	storm ui &
+	
+  从节点
+  
+	storm supervisor &
+	storm ui &(可选)
+	
+执行jps 命令
+
+在没有运行任务时，我们必须应该要看到4个进程：
+QuorumPeerMain、nimbus、core、supervisor
+
+使用浏览器:
+http://192.168.1.222:9090/ 可以看到Storm UI 界面
+
+测试用例执行命令
+
+	storm jar stom-wordcount.jar storm.starter.WordCountTopology wordcount

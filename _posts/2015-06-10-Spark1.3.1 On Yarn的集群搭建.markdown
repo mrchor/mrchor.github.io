@@ -1,0 +1,139 @@
+---
+layout:     post
+title:      "Spark1.3.1 On Yarn的集群搭建"
+date:       2015-06-10 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	Spark CentOS YARN
+---
+
+> “这就是我，一个低调的作者。”
+
+
+
+下面给出的是spark集群搭建的环境：
+
+操作系统：最小安装的CentOS 7（[下载地址](http://mirror.san.fastserv.com/pub/linux/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso)）
+
+Yarn对应的hadoop版本号：Hadoop的Cloudera公司发行版Hadoop2.6.0-CDH5.4.0（[下载地址](http://archive-primary.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.4.0.tar.gz)）
+
+Java版本号：JDK1.8（[下载地址](http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz)）
+
+Scala版本号：Scala2.10.4（[下载地址](http://www.scala-lang.org/files/archive/scala-2.10.4.tgz)）
+
+Spark版本号：spark-1.3.1-bin-hadoop2.6（[下载地址](http://d3kbcqa49mib13.cloudfront.net/spark-1.3.1-bin-hadoop2.6.tgz)）
+
+集群组成：
+
+	master  192.168.1.2
+	slave1   192.168.1.3
+	slave2   192.168.1.4
+	slave3   192.168.1.5
+	
+1、  操作系统的安装
+
+我觉得这个就没必要说了，下载一个虚拟机或者直接在真机安装，比较简单，不再赘述。
+
+2、  Java的安装
+
+请参看我的博文[《Jdk1.8在CentOS7中的安装与配置》](/2015/06/05/Jdk1.8在CentOS7中的安装与配置/index.html)有详细说明。
+
+3、  Scala的安装
+
+请参看我的博文[《Scala2.10.4在CentOS7中的安装与配置》](/2015/06/05/Scala2.10.4在CentOS7中的安装与配置/index.html)有详细说明。
+
+4、  Yarn的部署
+
+Yarn是由Hadoop2.x发展而来，是Hadoop1.x的JobTracker和TaskTracker的升级版本，是hadoop2.x的资源调度工具。搭建Hadoop2.x环境的时候，yarn会自动被搭建好，所以，我们只需要搭建hadoop环境即可。
+
+Hadoop具体环境搭建，请参看我的博文[《Hadoop2.6.0在CentOS 7中的集群搭建》](/2015/06/06/Hadoop2.6.0在CentOS-7中的集群搭建/index.html)有详细说明。
+
+5、  Spark的集群搭建
+
+a)         首先，从官网下载spark1.3.1对应hadoop2.6.0的版本（注：以下所有操作都在超级用户模式下进行！）
+
+b)         在主节点master的root/app的目录下，解压下载好的spark-1.3.1-bin-hadoop2.6.tgz：
+
+tar –xzvf spark-1.3.1-bin-hadoop2.6.tgz
+
+c)         配置Spark的环境变量：
+
+　　i. 　　vi  /etc/profile
+
+　　ii.　　在文件最后添加：
+  
+	  ## SPARK　
+	  export SPARK_HOME=spark的绝对路径（我这边是：/root/app/spark-1.3.1-bin-hadoop2.6）
+	  export PATH=$PATH:$SPARK_HOME/bin
+	  
+d)         Spark的相关文件配置
+
+　　i.　　slaves的配置：
+
+	vi slaves
+
+　　添加从节点slave名称：
+  
+	slave1
+	slave2
+	slave3
+
+　　ii.　　spark-env.sh的配置
+  
+	vi spark-env.sh
+　　向文件添加：
+  
+  	export JAVA_HOME=Java安装的绝对路径（我这边是：/root/app/jdk1.8）
+	export SCALA_HOME=Scala安装的绝对路径（我这边是：/root/app/scala2.10）
+	export HADOOP_CONF_DIR=hadoop环境下的配置文件目录etc/hadoop的绝对路径（我这边是：/root/app/hadoop-2.6.0-cdh5.4.0/etc/Hadoop）
+	export SPARK_MASTER_IP=主节点IP或主节点IP映射名称（我这边是：master）
+	export SPARK_MASTER_PORT=主节点启动端口（默认7077）
+	export PARK_MASTER_WEBUI_PORT=集群web监控页面端口（默认8080）
+	export SPARK_WORKER_CORES=从节点工作的CPU核心数目（默认1）
+	export SPARK_WORKER_PORT=从节点启动端口（默认7078）
+	export SPARK_WORKER_MEMORY=分配给Spark master和 worker 守护进程的内存空间（默认512m）
+	export SPARK_WORKER_WEBUI_PORT=从节点监控端口（默认8081）
+	export SPARK_WORKER_INSTANCES=每台从节点上运行的worker数量 (默认: 1). PS：当你有一个非常强大的计算的时候和需要多个Spark worker进程的时候你可以修改这个默认值大于1 . 如果你设置了这个值。要确保SPARK_WORKER_CORE 明确限制每一个worker的核心数, 否则每个worker 将尝试使用所有的核心。
+
+3.　　我这边的yarn部署是按照spark配置文件的默认部署的，如果你想根据实际情况来部署的话，可以修改一下文件：
+
+	HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files
+	SPARK_EXECUTOR_INSTANCES, Number of workers to start (Default: 2)
+	SPARK_EXECUTOR_CORES, Number of cores for the workers (Default: 1).
+	SPARK_EXECUTOR_MEMORY, Memory per Worker (e.g. 1000M, 2G) (Default: 1G)
+	SPARK_DRIVER_MEMORY, Memory for Master (e.g. 1000M, 2G) (Default: 512 Mb)
+	SPARK_YARN_APP_NAME, The name of your application (Default: Spark)
+	SPARK_YARN_QUEUE, The hadoop queue to use for allocation requests
+	SPARK_YARN_DIST_FILES, Comma separated list of files to be distributed with the job.
+	SPARK_YARN_DIST_ARCHIVES, Comma separated list of archives to be distributed with the job.
+	
+iii.　　Spark文件复制：
+
+将配置好的Spark文件复制到各个从节点slave对应的目录上：
+
+	scp spark-1.3.1-bin-hadoop2.6/ root@slave1:/root/app
+	scp spark-1.3.1-bin-hadoop2.6/ root@slave2:/root/app
+	scp spark-1.3.1-bin-hadoop2.6/ root@slave3:/root/app
+	
+6、  Spark On Yarn的集群启动：
+
+　　a)　　Yarn的启动：
+
+　　　　 i. 　　先进入hadoop目录下
+
+　　　　ii.　　 ./sbin/start-all.sh
+
+　　　　iii.　　 jps发现有ResourceManager进程，说明yarn启动完成
+
+　　b)　　Spark的启动：
+
+　　　　i.　　 先进入spark目录下
+
+　　　　ii. 　　./sbin/start-all.sh
+
+　　　　iii.　　 jps主节点发现有Master进程，jps从节点有Worker进程，说明spark启动完成
+
+　　c)      Spark监控页面，我就不测试了，一般都是masterIP：8080，如有打不开监控页面的问题也是防火墙没有被禁用的问题，请参看我的博文[《Hadoop环境搭建过程中可能遇到的问题》 ](/2015/06/07/Hadoop环境搭建过程中可能遇到的问题/index.html)里面的问题2有详细说明。
+
+7、至此，Spark On Yarn的集群搭建完成。
