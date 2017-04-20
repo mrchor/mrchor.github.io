@@ -1,0 +1,15 @@
+---
+layout:     post
+title:      "我的博客站开通了"
+subtitle:   " \"我的第一个博客\""
+date:       2015-04-20 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog: true
+tags:
+    - 生活
+---
+
+> “这就是我，一个低调的学者。”
+
+内容
