@@ -1,0 +1,226 @@
+---
+layout:     post
+title:      "Hadoop2.6.0在CentOS 7中的集群搭建"
+date:       2015-06-06 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	技术 Hadoop CentOS7
+---
+
+> “这就是我，一个低调的学者。”
+
+
+
+我这边给出我的集群环境是由一台主节点master和三台从节点slave组成：
+
+	master     192.168.1.2
+	slave1       192.168.1.3
+	slave2       192.168.1.4
+	slave3       192.168.1.5
+
+申明：我搭建的这个集群不是在普通用户，所以一下操作都是在超级用户root上。
+
+## 一、虚拟机的安装
+
+a)         我们从centos官网下载[CentOS7](http://isoredirect.centos.org/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1503-01.iso)（下载DVD IOS镜像就行了）
+
+b)         在VMware Workstation 11上安装四台虚拟机，这里的具体的安装步骤，我就不再赘述。
+
+## 二、虚拟机前期配置
+
+#### a)         装好四台虚拟机后，我们设置虚拟机为静态IP，并修改一下虚拟机的主机名和IP地址，还需要增加IP与主机映射：
+
+###### 1）  修改主机名（分别在四台虚拟机修改为：master、slave1、slave2和slave3）：
+
+	vi /etc/hostname
+
+###### 2）  修改IP地址并设置为静态IP：
+
+	vi /etc/sysconfig/network-scripts/ifcfg-eno16777736（虚拟机的网卡一般默认都是ifcfg-eno16777736）
+
+增加以下内容：
+
+	BOOTPROTO=static  #设置为静态IP
+	ONBOOT=yes    #打开网卡
+	IPADDR=192.168.1.2        #设置IP，对应上面给出的四个IP地址，这里是master的IP
+	NETMASK=255.255.255.0         #设置子网掩码
+	GATEWAY=192.168.1.1     #设置网关
+	DNS1=8.8.8.8   #设置DNS，这里是Google的两个域名解析
+	DNS2=8.8.4.4
+
+###### 3）  增加IP与主机映射：
+
+	vi /etc/hosts
+
+增加以下内容：
+
+	192.168.1.2       master
+	192.168.1.3      slave1
+	192.168.1.4     slave2
+	192.168.1.5     slave3
+
+4）在完成以上步骤后reboot重启四台虚拟机：
+
+	reboot
+	
+## 三、ssh免密码登录
+
+#### a)      在每台虚拟机的根目录root下，创建ssh公钥：
+
+###### 1）  ssh-keygen –t rsa   #连续回车，系统自动生成图形公钥
+
+###### 2）  在master中，进入.ssh目录，并将公钥写到authorized_keys：
+
+	cd .ssh/
+	ssh master cat /root/.ssh/id_rsa.pub>> authorized_keys #需要输入超级用户密码
+	ssh slave1 cat /root/.ssh/id_rsa.pub>> authorized_keys #需要输入超级用户密码
+	ssh slave2 cat /root/.ssh/id_rsa.pub>> authorized_keys #需要输入超级用户密码
+	ssh slave3 cat id_rsa.pub>> authorized_keys #需要输入超级用户密码
+
+###### 3）  更改authorized_keys属性，使之不能被修改：
+
+	chmod 600 authorized_keys
+
+###### 4）  在master的.ssh目录下，将生成的known_hosts和authorized_keys复制到各个从节点：
+
+	scp authorized_keys root@slave1:/root/ #需要输入超级用户密码
+	scp authorized_keys root@slave2:/root/ #需要输入超级用户密码
+	scp authorized_keys root@slave3:/root/ #需要输入超级用户密码
+	 scp known_hosts root@slave1:/root/
+	 scp known_hosts root@slave1:/root/
+	scp known_hosts root@slave1:/root/
+
+###### 5)      验证ssh的免密码登录：
+
+在master中输入：ssh slave1、ssh slave2和ssh slave3是否需要密码，如果不需要，则ssh免密码配置成功。
+
+## 四、[jdk安装](/2015/06/05/Jdk1.8在CentOS7中的安装与配置/index.html)
+
+## 五、[scala安装](/2015/06/05/Scala2.10.4在CentOS7中的安装与配置/index.html)
+
+## 六、Hadoop2.6的解压安装
+
+#### a)         我们从cloudera官网下载Hadoop-2.6.0-cdh5版本的压缩包
+
+#### b)         在master节点中，解压Hadoop压缩包到/root/app/中：
+
+	tar –xzvf hadoop-2.6.0-cdh5.4.0.tar.gz
+	
+## 七、集群环境Hadoop的配置
+
+在master中，进入到Hadoop的配置目录：
+
+	cd hadoop-2.6.0-cdh5.4.0 /etc/hadoop
+
+#### a)         slaves的配置：
+
+	vi slaves
+
+删除localhost，增加三个从节点：
+
+	slave1
+	slave2
+	slave3
+
+#### b)         core-site.xml的配置：
+
+在此之前，需要在Hadoop目录下创建data/tmp：
+
+	mkdir data
+	cd data
+	mrdir tmp
+	mkdir dfs
+	cd dfs
+	mkdir data
+	mkdir name
+
+在hadoop-2.6.0-cdh5.4.0 /etc/hadoop下：
+
+	vi core-site.xml
+
+在core-site.xml中增加：
+
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/root/app/hadoop-2.6.0-cdh5.4.0/data/tmp</value>
+    </property>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://master:8020</value>
+    </property>
+
+#### c)         hdfs-site.xml的配置：
+
+	vi hdfs-site.xml
+
+在hdfs-site.xml增加：
+
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>master:50090</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/root/app/hadoop-2.6.0-cdh5.4.0/data/tmp/dfs/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/root/app/hadoop-2.6.0-cdh5.4.0/data/tmp/dfs/data</value>
+    </property>
+
+#### d)         mapred-site.xml的配置：
+
+	vi mapred-site.xml
+
+在mapred-site.xml增加：
+
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+	</property>
+
+#### e)         yarn-site.xml的配置：
+
+	vi yarn-site.xml
+
+在yarn-site.xml增加：
+
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>master</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+
+#### f)　　　 在hadoop-env.sh文件的最后加：
+
+	export JAVA_HOME=/usr/local/jdk（Java安装环境）
+	
+#### g)          配置好master中的Hadoop后，将Hadoop复制到各个节点对应位置上：
+
+scp –r /root/app/hadoop-2.6.0-cdh5.4.0 slave1:/root/app/
+
+scp –r /root/app/hadoop-2.6.0-cdh5.4.0 slave2:/root/app/
+
+scp –r /root/app/hadoop-2.6.0-cdh5.4.0 slave3:/root/app/
+
+## 八、启动hadoop
+
+#### a）在主节点master的hadoop的目录下：
+
+	bin/hdfs namenode –format
+	sbin/start-dfs.sh
+	sbin/start-yarn.sh
+
+然后在主节点master输入jps可以查看到NameNode、SecondaryNameNode、Jps和ResourceManager四个进程。
+
+在从节点slave输入jps可以查看到Jps、NodeManager和DataNode三个进程。
+
+#### b)         出现以上进程提示，恭喜你，你的hadoop的环境搭建完成！

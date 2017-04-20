@@ -1,0 +1,69 @@
+---
+layout:     post
+title:      "Scala2.10.4在CentOS7中的安装与配置"
+date:       2015-06-05 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	Scala CentOS7
+---
+
+> “这就是我，一个低调的学者。”
+
+
+
+随着基于内存的大数据计算框架——spark的火爆流行，用于编写spark内核的Scala语言也随之流行开来。由于其编写代码的简洁性，受到了越来越多程序员的喜爱。我今天给大家展示的时Scala2.10.4在CentOS 7下的安装与配置：
+
+## 一、Scala下载
+
+我们需要在Scala官网下载[Scala2.10.4压缩包](http://www.scala-lang.org/files/archive/scala-2.10.4.tgz)
+
+## 二、Scala的安装
+
+#### a)         我们登录超级用户，在超级用户目录root下建立一个目录app：
+
+	su root  #然后输入密码
+
+	mkdir app
+
+#### b)         我们进入app，将下载好的Scala2.10.4压缩包导入centos：
+
+	cd app
+
+	rz   #使用rz命令将Scala压缩包从window导入centos当下目录app中
+
+#### c)         解压jdk压缩包
+
+	tar –xzvf scala-2.10.4.tgz
+
+#### d)         解压后的jdk的文件夹名字为scala-2.10.4,我们把它改为scala2.10：
+
+	mv scala-2.10.4/ scala2.10/
+
+#### e)         进入jdk文件夹，获取目录绝对路径（我的绝对路径是：/root/app/scala2.10）：
+
+	cd scala2.10
+
+	pwd
+
+## 三、scala的配置
+
+#### a)         使用vim命令打开系统的环境变量配置文件：
+
+	vi /etc/profile
+
+#### b)         在profile文件最后加入：
+
+	## SCALA
+
+	export SCALA_HOME=scala的绝对路径（我的是：/root/app/scala2.10）
+
+	export PATH=$PATH:$SCALA_HOME/bin
+
+## 四、配置验证
+
+我们输入scala –version，得到：
+
+	Scala code runner version 2.10.4 -- Copyright 2002-2013, LAMP/EPFL
+
+如果得到以上这句话，恭喜你，scala配置成功！
