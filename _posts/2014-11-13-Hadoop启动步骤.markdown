@@ -14,17 +14,25 @@ grammar_cjkRuby: true
 
 ### 一、ssh的启动
 {% highlight shell }
+
 	ssh localhost
+	
 {% endhighlight %}
 ### 二、hadoop的HDFS的格式化
 {% highlight shell }
+
 	bin/hadoop namenode -format
+	
 {% endhighlight %}
 ### 四、hadoop的datanode的启动
 {% highlight shell }
+
 	bin/hadoop-daemon.sh start datanode
+	
 {% endhighlight %}
 ### 五、hadoop的tasktracker的启动
 {% highlight shell }
+
 	bin/hadoop-daemon.sh start tasktracker
+	
 {% endhighlight %}

@@ -14,6 +14,7 @@ tags:	技术 Linux
 
 今天闲来无事，于是把HDFS的基本操作用java写出简化程序出来给大家一些小小帮助！
 {% highlight java %}
+
 	package com.quanttech;
 
 	import org.apache.hadoop.conf.Configuration;
@@ -53,4 +54,5 @@ tags:	技术 Linux
 			}
 		}
 	}
+
 {% endhighlight %}
