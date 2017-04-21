@@ -150,21 +150,21 @@ ssh需要配置成为免密码登录状态
 
 	bin/hadoop namenode –format
 
-![](http://images.cnitblog.com/blog/656602/201411/141457218199518.jpg)
+![](http://images.cnitblog.com/blog/656602/201411/141457218199518.jpg)<br>
 
 ## 2、启动hadoop环境
 
 	bin/start-all.sh
 
-![](http://images.cnitblog.com/blog/656602/201411/141457331479213.jpg)
+![](http://images.cnitblog.com/blog/656602/201411/141457331479213.jpg)<br>
 
 
 # 五、验证
 需要在浏览器中输入localhost：50030和localhost：50070验证hadoop是否安装完
 
-![](http://images.cnitblog.com/blog/656602/201411/141457485065138.jpg)
+![](http://images.cnitblog.com/blog/656602/201411/141457485065138.jpg)<br>
 
-![](http://images.cnitblog.com/blog/656602/201411/141458016478120.jpg)
+![](http://images.cnitblog.com/blog/656602/201411/141458016478120.jpg)<br>
 
 至此，hadoop的环境搭建完毕。
 
