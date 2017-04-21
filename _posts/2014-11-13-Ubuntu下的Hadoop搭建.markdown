@@ -29,7 +29,9 @@ http://vdisk.weibo.com/s/zNZl3
 
 在命令行下输入
 {% highlight shell %}
+
 	sudo tar xzvf jdk-8u25-linux-x64.tar.gz
+	
 {% endhighlight %}
 注意：可能会提示你输入用户密码
 ![](http://images.cnitblog.com/blog/656602/201411/141453589914853.jpg)
@@ -39,7 +41,9 @@ http://vdisk.weibo.com/s/zNZl3
 
 在命令行输入
 {% highlight shell %}
+
 	sudo tar xzvf hadoop0.20.2.tar.gz
+	
 {% endhighlight %}
 注意：可能会提示你输入用户密码
 
@@ -50,7 +54,9 @@ http://vdisk.weibo.com/s/zNZl3
 
 在系统联网的情况下，在命令行输入
 {% highlight shell %}
+
 	sudo apt-get install ssh
+	
 {% endhighlight %}
 注意：可能提示输入用户密码
 ![](http://images.cnitblog.com/blog/656602/201411/141454327107921.jpg)
@@ -58,7 +64,9 @@ http://vdisk.weibo.com/s/zNZl3
 
 在系统联网的情况下，在命令行输入
 {% highlight shell %}
+
 	sudo apt-get install rsync
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141454466781088.jpg)
 # 三、环境的配置
@@ -68,20 +76,26 @@ ssh需要配置成为免密码登录状态
 
 在命令行输入两句话：
 {% highlight shell %}
+
 	ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 	cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141455021319742.jpg)
 配置完毕，验证ssh是否需要密码，在命令行输入：
 {% highlight shell %}
+
 	ssh localhost
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141455193973685.jpg)
 以下操作在hadoop-0.20.2文件夹中的conf下进行，在命令行输入 cd Hadoop-0.20.2/conf
 
 如果不能修改下面的文件的话，在home目录下命令行输入：
 {% highlight shell %}
+
 	sudo chmod 777 * -R
+	
 {% endhighlight %}
 以下的文件修改还可以用vi修改不熟悉vi的同学，请先学一下vi操作
 
@@ -92,27 +106,36 @@ ssh需要配置成为免密码登录状态
 ![](http://images.cnitblog.com/blog/656602/201411/141455374915812.jpg)
 将JAVA_HOME改成你安装Java JDK的绝对路径
 {% highlight shell %}
+
 	gedit hadoop-env.sh
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141455560063769.jpg)
 ## 3、修改hadoop核心配置文件core-site.xml
 {% highlight shell %}
+
 	gedit core-site.xml
+	
 {% endhighlight %}
 {% highlight xml %}
+
 	<configuration>
 		<property>
 			<name>fs.default.name</name>
 			<value>hdfs://localhost:9000</value>
 		</property>
 	</configuration>
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141456140066867.jpg)
 ## 4、修改hadoop中HDFS的配置，修改replication
 {% highlight shell %}
+
 	gedit hdfs-site.xml
+	
 {% endhighlight %}
 {% highlight xml %}	
+
 	<configuration>
 		<property>
            <name>dfs.data.dir</name>
@@ -123,19 +146,24 @@ ssh需要配置成为免密码登录状态
            <value>1</value>
 		</property>
 	</configuration>
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141500502728402.jpg)
 ## 5、修改hadoop中MapReduce的配置文件，配置的是JobTracker的地址和端口
 {% highlight shell %}
+
 	gedit mapred-site.xml
+	
 {% endhighlight %}
 {% highlight shell %}
+
 	<configuration>
 		<property>
            <name>mapred.job.tracker</name>
            <value>localhost:9001</value>
 		</property>
 	</configuration>
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141501126006289.jpg)
 # 四、hadoop的启动
@@ -143,12 +171,16 @@ ssh需要配置成为免密码登录状态
 
 ## 1、格式化hadoop中的文件系统HDFS
 {% highlight shell %}
+
 	bin/hadoop namenode –format
+	
 {% endhighlight %}
 ![](http://images.cnitblog.com/blog/656602/201411/141457218199518.jpg)
 ## 2、启动hadoop环境
 {% highlight shell %}
+
 	bin/start-all.sh
+	
 {% endhighlight %}	
 ![](http://images.cnitblog.com/blog/656602/201411/141457331479213.jpg)
 # 五、验证
