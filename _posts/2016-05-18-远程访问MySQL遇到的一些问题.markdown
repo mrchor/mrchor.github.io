@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "eclipse远程调试Hadoop"
+title:      "远程访问MySQL遇到的一些问题"
 date:       2016-05-18 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
