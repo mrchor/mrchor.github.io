@@ -1,0 +1,49 @@
+---
+layout:     post
+title:      "CM+CDH安装遇到的问题"
+date:       2016-05-24 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	Cloudera\bmanager CDH
+---
+
+> “这就是我，一个低调的作者。”
+
+
+1、实在是在安装CDH的时候无法安装成功的话，只有重新启动了，下面给大家分享一个神器，按照这个脚本应该差不多就能卸载干净，然后重新安装，写一个脚本，内容如下，救命的神器呀：
+
+	#!/bin/bash
+	sudo /usr/share/cmf/uninstall-cloudera-manager.sh
+	sudo service cloudera-scm-server stop
+	sudo service cloudera-scm-server-db stop
+
+	sudo service cloudera-scm-agent stop
+	sudo yum remove cloudera-manager-agent
+
+	sudo yum remove cloudera-manager-server
+	sudo yum remove cloudera-manager-server-db-2
+
+	sudo yum remove 'cloudera-manager-*' bigtop-utils bigtop-jsvc bigtop-tomcat hadoop hadoop-hdfs hadoop-httpfs hadoop-mapreduce hadoop-yarn hadoop-client hadoop-0.20-mapreduce hue-plugins hbase hive oozie oozie-client pig zookeeper hue impala impala-shell solr-server
+
+	sudo yum remove 'cloudera-manager-*' avro-tools crunch flume-ng hadoop-hdfs-fuse hadoop-hdfs-nfs3 hadoop-httpfs hbase-solr hive-hbase hive-webhcat hue-beeswax hue-hbase hue-impala hue-pig hue-plugins hue-rdbms hue-search hue-spark hue-sqoop hue-zookeeper impala impala-shell kite llama mahout oozie pig pig-udf-datafu search sentry solr-mapreduce spark-python sqoop sqoop2 whirr
+
+	#sudo zypper remove 'cloudera-manager-*' bigtop-utils bigtop-jsvc bigtop-tomcat hadoop hadoop-hdfs hadoop-httpfs hadoop-mapreduce hadoop-yarn hadoop-client hadoop-0.20-mapreduce hue-plugins hbase hive oozie oozie-client pig zookeeper hue impala impala-shell solr-server
+
+	#sudo zypper remove 'cloudera-manager-*' avro-tools crunch flume-ng hadoop-hdfs-fuse hadoop-hdfs-nfs3 hadoop-httpfs hbase-solr hive-hbase hive-webhcat hue-beeswax hue-hbase hue-impala hue-pig hue-plugins hue-rdbms hue-search hue-spark hue-sqoop hue-zookeeper impala impala-shell kite llama mahout oozie pig pig-udf-datafu search sentry solr-mapreduce spark-python sqoop sqoop2 whirr
+
+	sudo yum clean all
+	#sudo zypper remove 'cloudera-manager-*'
+
+	for u in cloudera-scm flume hadoop hdfs hbase hive httpfs hue impala llama mapred oozie solr spark sqoop sqoop2 yarn zookeeper; do sudo kill $(ps -u $u -o pid=); done
+
+	umount /var/run/cloudera-scm-agent/process
+	sudo rm -Rf /usr/share/cmf /var/lib/cloudera* /var/cache/yum/cloudera* /var/log/cloudera* /var/run/cloudera* /var/run/hdfs*
+
+	sudo rm /tmp/.scm_prepare_node.lock
+	sudo rm -Rf /var/lib/flume-ng /var/lib/hadoop* /var/lib/hue /var/lib/navigator /var/lib/oozie /var/lib/solr /var/lib/sqoop* /var/lib/zookeeper  /var/lib/hbase /var/lib/hive /var/lib/impala
+
+	sudo rm -Rf /dfs /mapred /yarn
+
+	sudo rm -rf /var/log/hadoop* /var/log/hbase /var/log/impalad /var/log/zookeeper /var/cache/yum/x86_64/6/cloudera*
+	

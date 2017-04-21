@@ -1,0 +1,93 @@
+---
+layout:     post
+title:      "Hadoop常用命令"
+date:       2016-05-07 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	Hadoop 命令
+---
+
+> “这就是我，一个低调的作者。”
+
+
+一、Hadoop的hdfs dfs命令
+
+参数  |  作用  |  示例  |  返回值
+---|---|---|---
+appendToFile  |  将一个或者多个本地
+文件追加到目的文件  |  hdfs dfs -appendToFile localfile 
+/user/hadoop/hadoopfile  |  Returns 0 on success and 1 on error
+cat  |  输出文件  |  hdfs dfs -cat file:///file3 /user/hadoop/file4  |  Returns 0 on success and -1 on error
+chgrp  |  改变文件的分组  |  hdfs dfs -chgrp [-R] GROUP URI [URI ...]  |   
+chmod  |  改变文件的权限  |  hdfs dfs -chmod [-R] <MODE[,MODE]... | 
+OCTALMODE> URI [URI ...]  |   
+chown  |  改变文件的拥有者  |  hdfs dfs -chown [-R] [OWNER][:[GROUP]] URI [URI ]  |   
+copyFromLocal  |  从本地复制  |     |   
+copyToLocal  |  复制到本地  |     |   
+count  |  得到文件/目录等数目
+追加参数-q, -h有不同的意义  |  hdfs dfs -count -q hdfs://nn1.example.com/file1  |  Returns 0 on success and -1 on error
+cp  |  复制，参数-f,-p  |  hdfs dfs -cp /user/hadoop/file1 /user/hadoop/file2  |  Returns 0 on success and -1 on error
+du  |  得到指定文件的大小  |  hdfs dfs -du /test/hadoop  |  Returns 0 on success and -1 on error.
+dus  |  已摒弃，和du类似  |     |   
+expunge  |  清空回收站  |  hdfs dfs -expunge  |   
+get  |  复制文件到本地路径下  |  hdfs dfs -get /user/hadoop/file localfile  |  Returns 0 on success and -1 on error
+getfacl  |  显示文件或者目录的
+权限控制列表  |  hdfs dfs -getfacl /file
+hdfs dfs -getfacl -R /dir  |  Returns 0 on success and non-zero on error
+getfattr  |  显示文件或者目录的扩展属性  |  hdfs dfs -getfattr -d /file  |  Returns 0 on success and non-zero on error
+getmerge  |  合并多个文件一个目标文件里  |  hdfs dfs -getmerge <src> <localdst> [addnl]  |   
+ls  |  和linux里一样  |  hdfs dfs -ls /user/hadoop/file1  |  Returns 0 on success and -1 on error
+lsr  |  等同于ls -R  |     |   
+mkdir  |  创建目录，-p创建多层目录  |  hdfs dfs -mkdir /user/hadoop/dir1 /user/hadoop/dir2  |  Returns 0 on success and -1 on error
+moveFromLocal  |  类似put，区别在于put完后删除
+原文件  |     |   
+moveToLocal  |  目前没有实现  |     |   
+mv  |  移动文件  |  hdfs dfs -mv /user/hadoop/file1 /user/hadoop/file2  |  Returns 0 on success and -1 on error
+put  |  像目标目录推送文件  |  hdfs dfs -put localfile /user/hadoop/hadoopfile  |  Returns 0 on success and -1 on error
+rm  |  删除文件  |  hdfs dfs -rm hdfs://nn.example.com/file /
+user/hadoop/emptydir  |  Returns 0 on success and -1 on error
+rmr  |  类似于rm -r  |     |   
+setfacl  |  设置文件或者目录的
+权限控制列表  |  hdfs dfs -setfacl -m user:hadoop:rw- /file  |  Returns 0 on success and non-zero on error
+setfattr  |  设置文件或者目录的扩展属性  |  hdfs dfs -setfattr -n user.myAttr -v myValue /file  |  Returns 0 on success and non-zero on error
+setrep  |  改变文件和目录的复制因子  |  hdfs dfs -setrep -w 3 /user/hadoop/dir1  |  Returns 0 on success and -1 on error
+stat  |  返回路径信息  |  hdfs dfs -stat path  |  Exit Code: Returns 0 on success and -1 on error
+tail  |  输出文件的最后1千字节  |  hdfs dfs -tail pathname  |  Returns 0 on success and -1 on error
+test  |  检查文件  |  hdfs dfs -test -e filename  |   
+text  |  以文本方式输出文件  |  hdfs dfs -text <src>  |   
+touchz  |  创建空文件  |  hdfs dfs -touchz pathname  |  Returns 0 on success and \-1 on error
+
+二、Hadoop的hdfs dfsadmin命令
+
+　　1）文件/文件夹/空间大小限制命令
+
+	hdfs dfsadmin -setQuota 10 lisi　　限制lisi目录只能有10个文件或者文件夹
+	hdfs dfsadmin -clrQuota lisi　　清除lisi目录下的文件或者文件夹个数限制
+	hdfs dfsadmin -setSpaceQuota 4k /lisi/　　设置lisi目录的空间大小
+	hdfs dfsadmin -clrSpaceQuota  /lisi/　　清除lisi目录下的空间大小限制　　
+	hdfs dfs -count -q -h /lisi　　查看lisi目录的文件夹或文件个数、空间大小限制情况
+
+　　2）安全模式　　
+
+	hdfs dfsadmin -safemode get　　获取安全模式开启状态
+	hdfs dfsadmin -safemode enter　　进入安全模式
+	hdfs dfsadmin -safemode leave　　退出安全模式
+	hdfs dfsadmin -safemode 　　等待安全模式结束
+
+	*#hadoop fs -ls /  查看HDFS根目录
+	*#hadoop fs -mkdir /test 在根目录创建一个目录test
+	#hadoop fs -mkdir /test1 在根目录创建一个目录test1
+
+	*#echo -e 'hadoop second lesson' >test.txt
+	*#hadoop fs -put ./test.txt /test　
+	*或#hadoop fs -copyFromLocal ./test.txt /test
+	*#cd ..
+	#hadoop fs -get /test/test.txt .
+	或#hadoop fs -getToLocal /test/test.txt .
+	*#hadoop fs -cp /test/test.txt /test1
+	*#hadoop fs -rm /test1/test.txt
+	*#hadoop fs -mv /test/test.txt /test1
+	*#hadoop fs -rmr /test1  
+	*#hadoop fs -appendToFile
+

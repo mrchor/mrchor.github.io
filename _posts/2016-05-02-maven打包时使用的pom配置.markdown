@@ -1,0 +1,53 @@
+---
+layout:     post
+title:      "maven打包时使用的pom配置"
+date:       2016-05-02 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	pom maven maven打包
+---
+
+> “这就是我，一个低调的作者。”
+
+
+	<build>
+			<plugins>
+				<!-- compiler插件, 设定JDK版本 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.7</source>
+						<target>1.7</target>
+						<showWarnings>true</showWarnings>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+					<!-- 设置jar包入口类 -->
+								<mainClass>cn.mrchor.spider.Spider</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+

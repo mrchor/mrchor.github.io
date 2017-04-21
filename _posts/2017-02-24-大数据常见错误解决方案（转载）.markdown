@@ -1,0 +1,621 @@
+---
+layout:     post
+title:      "大数据常见错误解决方案（转载）"
+date:       2017-02-24 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	大数据 常见错误 解决方案
+---
+
+> “这就是我，一个低调的作者。”
+
+
+1、用./bin/spark-shell启动spark时遇到异常：java.net.BindException: Can't assign requested address: Service 'sparkDriver' failed after 16 retries!
+
+解决方法：add export SPARK_LOCAL_IP="127.0.0.1" to spark-env.sh
+
+2、java Kafka producer error:ERROR kafka.utils.Utils$ - fetching topic metadata for topics [Set(words_topic)] from broker [ArrayBuffer(id:0,host: xxxxxx,port:9092)] failed
+
+解决方法：Set 'advertised.host.name' on server.properties of Kafka broker to server's realIP(same to producer's 'metadata.broker.list' property)
+
+3、java.net.NoRouteToHostException: No route to host
+
+解决方法：zookeeper的IP要配对
+
+4、Fatal error during KafkaServer startup. Prepare to shutdown (kafka.server.KafkaServer)   java.net.UnknownHostException: linux-pic4.site:
+
+解决方法：add your hostname to /etc/hosts: 127.0.0.1 localhost linux-pic4.site
+
+5、org.apache.spark.SparkException: A master URL must be set in your configuration
+
+解决方法：SparkConf sparkConf = new SparkConf().setAppName("JavaDirectKafkaWordCount").setMaster("local");
+
+6、Failed to locate the winutils binary in the hadoop binary path
+
+解决方法:先安装好hadoop
+
+7、启动spark时： Failed to get database default, returning NoSuchObjectException
+
+解决方法：1)Copy winutils.exe from here(https://github.com/steveloughran/winutils/tree/master/hadoop-2.6.0/bin) to some folder say, C:\Hadoop\bin. Set HADOOP_HOME to C:\Hadoop.2）Open admin command prompt. Run C:\Hadoop\bin\winutils.exe chmod 777 /tmp/hive
+
+8、org.apache.spark.SparkException: Only one SparkContext may be running in this JVM (see SPARK-2243). To ignore this error, set spark.driver.allowMultipleContexts = true.
+
+解决方法：Use this constructor JavaStreamingContext(sparkContext: JavaSparkContext, batchDuration: Duration)  替代  new JavaStreamingContext(sparkConf, Durations.seconds(5));
+
+9、Reconnect due to socket error: java.nio.channels.ClosedChannelException
+
+解决方法：kafka服务器broker ip写对
+
+10、java.lang.IllegalArgumentException: requirement failed: No output operations registered, so nothing to execute
+
+解决方法：tranformation最后一步产生的那个RDD必须有相应Action操作，例如massages.print()等
+
+11、经验：spark中数据写入ElasticSearch的操作必须在action中以RDD为单位执行
+12、 Problem binding to [0.0.0.0:50010] java.net.BindException: Address already in use;
+
+解决方法：master和slave配置成同一个IP导致的，要配成不同IP
+
+13、CALL TO LOCALHOST/127.0.0.1:9000
+
+解决方法：host配置正确，/etc/sysconfig/network    /etc/hosts    /etc/sysconfig/network-scripts/ifcfg-eth0
+
+13、打开namenode:50070页面，Datanode Infomation只显示一个节点
+
+解决方法：SSH配置错误导致，主机名一定要严格匹配，重新配置ssh免密码登录
+
+14、经验：搭建集群时要首先配置好主机名，并重启机器让配置的主机名生效
+15、INFO hdfs.DFSClient: Exception in createBlockOutputStream  java.net.NoRouteToHostException: No route to host
+
+解决方法：如果主从节点能相互ping通，那就关掉防火墙 service iptables stop
+
+16、经验：不要随意格式化HDFS，这会带来数据版本不一致等诸多问题，格式化前要清空数据文件夹
+17、namenode1: ssh: connect to host namenode1 port 22: Connection refused
+
+解决方法：sshd被关闭或没安装导致，which sshd检查是否安装，若已经安装，则sshd restart，并ssh 本机hostname，检查是否连接成功
+
+18、Log aggregation has not completed or is not enabled.
+
+解决方法：在yarn-site.xml中增加相应配置，以支持日志聚合
+
+19、failed to launch org.apache.spark.deploy.history.History Server full log in
+
+解决方法：正确配置spark-defaults.xml,spark-en.sh中SPARK_HISTORY_OPTS属性
+
+20、Exception in thread "main" org.apache.spark.SparkException: Yarn application has already ended! It might have been killed or unable to launch application master.
+
+解决方法：yarn-lient模式出现的异常，暂时无解
+
+21、hadoop的文件不能下载以及YARN中Tracking UI不能访问历史日志
+
+解决方法：windows系统不能解析域名所致，把hosts文件hostname复制到windows的hosts中
+
+22、经验：HDFS文件路径写法为：hdfs://master:9000/文件路径，这里的master是namenode的hostname,9000是hdfs端口号。
+23、Yarn JobHistory Error: Failed redirect for container
+
+解决方法：将 http://:19888/jobhistory/logs  配置到yarn-site.xml中，重启yarn和JobHistoryServer
+
+24、通过hadoop UI访问hdfs文件夹时，出现提示 Permission denied: user=dr.who
+
+解决方法：namonode节点终端执行：hdfs dfs -chmod -R 755 /
+
+25、经验：Spark的Driver只有在Action时才会收到结果
+26、经验：Spark需要全局聚合变量时应当使用累加器（Accumulator）
+27、经验：Kafka以topic与consumer group划分关系，一个topic的消息会被订阅它的消费者组全部消费，如果希望某个consumer使用topic的全部消息，可将该组只设一个消费者，每个组的消费者数目不能大于topic的partition总数，否则多出的consumer将无消可费
+28、java.lang.NoSuchMethodError: com.google.common.util.concurrent.MoreExecutors.directExecutor()Ljava/util/concurrent/Executor;
+
+解决方法：统一ES版本，尽量避免直接在spark中创建ES client
+
+29、eturned Bad Request(400) - failed to parse;Compressor detection can only be called on some xcontent bytes or compressed xcontent bytes; Bailing out..
+
+解决方法：写入ES的数据格式纠正
+
+30、java.util.concurrent.TimeoutException: Cannot receive any reply in 120 seconds
+
+解决方法：确保所有节点之间能够免密码登录
+
+31、集群模式下，spark无法向elasticsearch写入数据
+
+解决方法：采用这种写入方式（带上es配置的Map参数）results.foreachRDD(javaRDD -> {JavaEsSpark.saveToEs(javaRDD, esSchema, cfg);return null;});
+
+32、经验：所有自定义类要实现serializable接口，否则在集群中无法生效
+33、经验：resources资源文件读取要在Spark Driver端进行，以局部变量方式传给闭包函数
+34、通过nio读取资源文件时，java.nio.file.FileSystemNotFoundException  at com.sun.nio.zipfs.ZipFileSystemProvider.getFileSystem(ZipFileSystemProvider.java:171)
+
+解决方法：打成jar包后URI发生变化所致，形如jar:file:/C:/path/to/my/project.jar!/my-folder，要采用以下解析方式，
+
+final Map env = new HashMap<>();
+final String[] array = uri.toString().split("!");
+final FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
+final Path path = fs.getPath(array[1]);
+35、经验：DStream流转化只产生临时流对象，如果要继续使用，需要一个引用指向该临时流对象
+36、经验：提交到yarn cluster的作业不能直接print到控制台，要用log4j输出到日志文件中
+37、java.io.NotSerializableException: org.apache.log4j.Logger
+
+解决方法：序列化类中不能包含不可序列化对象，you have to prevent logger instance from default serializabtion process, either make it transient or static. Making it static final is preferred option due to many reason because if you make it transient than after deserialization logger instance will be null and any logger.debug() call will result in NullPointerException in Java because neither constructor not instance initializer block is called during deserialization. By making it static and final you ensure that its thread-safe and all instance of Customer class can share same logger instance, By the way this error is also one of the reason Why Logger should be declared static and final in Java program. 
+
+38、log4j:WARN Unsupported encoding
+
+解决方法：1.把UTF改成小写utf-8    2.设置编码那行有空格
+
+39、MapperParsingException[Malformed content, must start with an object
+
+解决方法：采用接口JavaEsSpark.saveJsonToEs，因为saveToEs只能处理对象不能处理字符串
+
+40、 ERROR ApplicationMaster: SparkContext did not initialize after waiting for 100000 ms. Please check earlier log output for errors. Failing the application
+
+解决方法：资源不能分配过大,或者没有把.setMaster("local[*]")去掉
+
+41、WARN Session 0x0 for server null, unexpected error, closing socket connection and attempting reconnect (org.apache.zookeeper.ClientCnxn)
+
+解决方法：配置文件broker编号要写对，命令中的IP写真实IP
+
+42、 User class threw exception: org.apache.spark.SparkException: org.apache.spark.SparkException: Couldn't find leaders for Set([mywaf,7], [mywaf,1])
+
+解决方法：正确配置kafka，并重新创建topic
+
+43、在ES界面发现有节点shard分片不显示
+
+解决方法：该节点磁盘容量不足，清理磁盘增加容量
+
+ 
+
+44、The method updateStateByKey(Function2,Optional,Optional>, int) in the type JavaPairDStream is not applicable for the arguments (Function2,Optional,Optional>, int)
+
+解决方法：Spark use com.google.common.base.Optional not jdk default package java.util.Optional
+
+45、NativeCrc32.nativeComputeChunkedSumsByteArray
+
+解决方法：配置eclipse的hadoop-home，bin和system32文件夹中加入64位的2.6版本的hadoop.dll
+
+46、经验：Spark Streaming包含三种计算模式：nonstate 、stateful 、window
+
+ 
+47、Yarn的RM单点故障
+
+解决方法：通过三节点zookeeper集群和yarn-site.xml配置文件完成Yarn HA
+
+48、经验：kafka可通过配置文件使用自带的zookeeper集群
+
+ 
+49、经验：Spark一切操作归根结底是对RDD的操作
+
+ 
+50、如何保证kafka消息队列的强有序
+
+解决方法：把需要强有序的topic只设置一个partition
+
+51、linux批量多机互信
+
+解决方法：pub秘钥配成一个
+
+52、org.apache.spark.SparkException: Failed to get broadcast_790_piece0 of broadcast_790
+
+解决方法：去除spark-defaults.conf中spark.cleaner.ttl配置
+
+53、Yarn HA环境下，通过web访问history日志被跳转到8088而无法显示
+
+解决方法：恢复Yarn Http默认端口8088
+
+54、but got no response. Marking as slave lost
+
+解决方法：使用yarn client提交作业遇到这种情况，暂时无解
+
+55、Using config: /work/poa/zookeeper-3.4.6/bin/../conf/zoo.cfg  Error contacting service. It is probably not running.
+
+解决方法：配置文件不正确，例如hostname不匹配等
+
+56、经验：部署Spark任务，不用拷贝整个架包，只需拷贝被修改的文件，然后在目标服务器上编译打包。
+
+ 
+57、Spark setAppName doesn't appear in Hadoop running applications UI
+
+解决方法：set it in the command line for spark-submit "--name BetterName"
+
+58、如何监控Sprak Streaming作业是否挂掉
+
+解决方法：通过监控Driver端口或者根据yarn指令写Linux定时脚本监控
+
+59、kafka内外网问题
+
+解决方法：kafka机器双网卡，配置文件server.properties中advertised.host.name不要写IP，用域名形式，外网的生产者和内网的消费者各自解析成自己所需的IP。
+
+60、经验：kafka的log.dirs不要设置成/tmp下的目录，貌似tmp目录有文件数和磁盘容量限制
+
+ 
+61、kafka搬机器后，在新的集群，topic被自动创建，且只有一台broker负载
+
+解决方法：server.properties中加上delete.topic.enable=true和auto.create.topics.enable=false，删除旧的topic，重新创建topic，重启kafka
+
+62、安装sbt，运行sbt命令卡在Getting org.scala-sbt sbt 0.13.6 ...
+
+解决方法：sbt takes some time to download its jars when it is run first time，不要退出，直至sbt处理完
+
+63、经验：ES的分片类似kafka的partition
+
+ 
+64、kafka出现OOM异常
+
+解决方法：进入kafka broker启动脚本中，在export KAFKA_HEAP_OPTS="-Xmx24G -Xms1G"调大JVM堆内存参数
+
+65、linux服务器磁盘爆满，检查超过指定大小的文件
+
+解决方法：find / -type f -size +10G  
+
+66、spark-direct kafka streaming限速
+
+解决方法：spark.streaming.kafka.maxRatePerPartition，配置每秒每个kafka分区读取速率
+
+67、org.elasticsearch.hadoop.rest.EsHadoopInvalidRequest: Found unrecoverable error returned Not Found(404) - [EngineClosedException CurrentState[CLOSED]
+
+解决方法：在kopf插件中对该索引先close再open即可。造成原因可能是Index创建时有shard坏掉。
+
+68、Job aborted due to stage failure: Task not serializable:
+
+解决方法：Serializable the class;Declare the instance only within the lambda function passed in map;Make the NotSerializable object as a static and create it once per machine;Call rdd.forEachPartition and create the NotSerializable object in there
+
+69、Pipeline write will fail on this Pipeline because it contains a stage which does not implement Writable
+
+解决方法：this cannot be done as of Spark 1.6,需升级spark版本
+
+70、IDEA从git导入scala项目，通篇提示变量never used
+
+解决方法：将src文件夹mark directory as sources root
+
+71、Run configuration in IntelliJ result in "Cannot start compilation: the output path is not specified for module "xxx". Specify the output path in Configure Project.
+
+解决方法：In the default intellij options, "Make" was checked as "Before Launch". Unchecking it fixed the issue.
+
+72、UDFRegistration$$anonfun$register$26$$anonfun$apply$2 cannot be cast to scala.Function1
+
+解决方法：聚合函数不能用UDF，而应该定义UDAF
+
+73、SPARK SQL replacement for mysql GROUP_CONCAT aggregate function
+
+解决方法：自定义UDAF
+
+74、在intellij idea的maven项目中，无法New scala文件
+
+解决方法：pom.xml加入scala-tools插件相关配置，下载并更新
+
+75、Error:scala: Error: org.jetbrains.jps.incremental.scala.remote.ServerException
+
+解决方法：修改pom.xml配置文件，把scala换到最新版本
+
+76、HADOOP 磁盘满的各节点平衡
+
+解决方法：运行指令hdfs balancer -Threshold 3 或者 运行 start-balancer.sh 脚本格式：$Hadoop_home/bin/start-balancer.sh -threshold，参数3是比例参数，表示3%，也就是平各个DataNode直接磁盘使用率偏差在3%以内
+
+77、经验：sparkSQL UDAF中update函数的第二个参数 input: Row 对应的并非DataFrame的行，而是被inputSchema投影了的行
+
+ 
+78、Error: No TypeTag available for String  sqlContext.udf.register()
+
+解决方法：scala版本不一致，统一所有scala版本
+
+79、How to add a constant column in a Spark DataFrame?
+
+解决方法：The second argument for DataFrame.withColumn should be a Column so you have to use a literal:   df.withColumn('new_column', lit(10))
+
+80、Error:scalac:Error:object VolatileDoubleRef does not have a member create
+
+解决方法：scala版本不一致，统一开发环境和系统的scala版本
+
+81、java.lang.NoSuchMethodError: scala.collection.immutable.HashSet$.empty()Lscala/collection/immutable/HashSet
+
+解决方法：统一scala和spark的scala版本
+
+82、maven项目打包去除不要的依赖，防止目标jar容量过大
+
+解决方法：在中加入provided标明该依赖不放进目标jar,并用maven shaded方式打包
+
+83、maven打包scala和java的混合项目
+
+解决方法：使用指令 mvn clean scala:compile compile package
+
+84、sparkSQL的udf无法注册UDAF聚合函数
+
+解决方法：把UDAF自定义类的object关键字改成class声明
+
+85、经验：运行时删除hadoop数据目录会导致依赖HDFS的JOB失效
+
+ 
+86、[IllegalArgumentException[Document contains at least one immense term in field=XXX
+
+解决方法：在ES中创建索引时对长文本字段要分词
+
+87、maven shade打包资源文件没有打进去
+
+解决方法：把resources文件夹放到src/main/下面，与scala或java文件夹并排
+
+88、经验：spark Graph根据边集合构建图，顶点集合只是指定图中哪些顶点有效
+
+ 
+89、ES写query用到正则匹配时，Determinizing automaton would result in more than 10000 states.
+
+解决方法：正则表达式的字符串太长，复杂度过高，正则匹配要精练，不要枚举式匹配
+
+90、java.lang.StackOverflowError   at org.apache.spark.sql.catalyst.trees.CurrentOrigin$.withOrigin(TreeNode.scala:53)
+
+解决方法：sql语句的where条件过长，字符串栈溢出
+
+91、org.apache.spark.shuffle.MetadataFetchFailedException:  Missing an output location for shuffle 0
+
+解决方法：加大executor内存，减少executor个数，加大executor并发度
+
+92、ExecutorLostFailure (executor 3 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 61.0 GB of 61 GB physical memory used
+
+解决方法：移除RDD缓存操作，增加该JOB的spark.storage.memoryFraction系数值，增加该job的spark.yarn.executor.memoryOverhead值
+
+93、EsRejectedExecutionException[rejected execution (queue capacity 1000) on org.elasticsearch.search.action.SearchServiceTransportAction
+
+解决方法:减少spark并发数，降低对ES的并发读取
+
+94、经验：单个spark任务的excutor核数不宜设置过高，否则会导致其他JOB延迟
+
+ 
+95、经验：数据倾斜只发生在shuffle过程，可能触发shuffle操作的算子有：distinct  groupByKey  reduceByKey  aggregateByKey  join  cogroup  repartition等
+
+ 
+96、如何定位spark的数据倾斜
+
+解决方法：在Spark Web UI看一下当前stage各个task分配的数据量以及执行时间，根据stage划分原理定位代码中shuffle类算子
+
+97、如何解决spark数据倾斜
+
+解决方法：1）过滤少数导致倾斜的key（仅限于抛弃的Key对作业影响很小），2）提高shuffle操作并行度（提升效果有限），3）两阶段聚合（局部聚合+全局聚合），先对相同的key加前缀变成多个key，局部shuffle后再去掉前缀，再次进行全局shuffle（仅适用于聚合类的shuffle操作，效果明显，对于join类的shuffle操作无效），4）将reduce join转为map join，将小表进行广播，对大表map操作，遍历小表数据（仅适用于大小表或RDD情况），5）使用随机前缀和扩容RDD进行join，对其中一个RDD每条数据打上n以内的随机前缀，用flatMap算子对另一个RDD进行n倍扩容并扩容后的每条数据依次打上0~n的前缀，最后将两个改造key后的RDD进行join（能大幅缓解join类型数据倾斜，需要消耗巨额内存）
+
+98、经验：shuffle write就是在一个stage结束计算之后，为了下一个stage可以执行shuffle类的算子，而将每个task处理的数据按key进行分类，将相同key都写入同一个磁盘文件中，而每一个磁盘文件都只属于下游stage的一个task，在将数据写入磁盘之前，会先将数据写入内存缓存中，下一个stage的task有多少个，当前stage的每个task就要创建多少份磁盘文件。
+
+ 
+99、java.util.regex.PatternSyntaxException: Dangling meta character '?' near index 0
+
+解决方法：元字符记得转义
+
+100、spark弹性资源分配
+
+解决方法：配置spark shuffle service,打开spark.dynamicAllocation.enabled
+
+101、经验：kafka的comsumer groupID对于spark direct streaming无效
+
+ 
+102、启动hadoop yarn,发现只启动了ResourceManager，没有启动NodeManager
+
+解决方法：yarn-site.xml配置有问题，检查并规范各项配置
+
+103、如何查看hadoop系统日志
+
+解决方法：Hadoop 2.x中YARN系统的服务日志包括ResourceManager日志和各个NodeManager日志，它们的日志位置如下：ResourceManager日志存放位置是Hadoop安装目录下的logs目录下的yarn-*-resourcemanager-*.log，NodeManager日志存放位置是各个NodeManager节点上hadoop安装目录下的logs目录下的yarn-*-nodemanager-*.log
+
+104、经验：小于128M的小文件都会占据一个128M的BLOCK，合并或者删除小文件节省磁盘空间
+
+ 
+105、how to remove Non DFS Used
+
+解决方法：1）清除hadoop数据目录中用户缓存文件：cd /data/hadoop/storage/tmp/nm-local-dir/usercache;du -h;rm -rf `find  -type f -size +10M`;  2）清理Linux文件系统中的垃圾数据
+
+106、经验：Non DFS Used指的是非HDFS的所有文件
+
+ 
+107、linux profile配置文件隔离
+
+解决方法：cd /etc/profile.d;在这里新建相应配置脚本
+
+108、The reference to entity "autoReconnect" must end with the ';' delimiter
+
+解决方法：把&替换成&
+
+109、Service hiveserver not found
+
+解决方法：Try to run bin/hive --service hiveserver2 instead of hive --service hiveserver for this version of apache hive
+
+110、Failed to execute spark task, with exception 'org.apache.hadoop.hive.ql.metadata.HiveException(Failed to create spark client.)'
+
+解决方法：不要预编译的spark，重新编译spark，并保证与hive pom中的版本一致
+
+111、java.lang.NoSuchFieldError: SPARK_RPC_SERVER_ADDRESS  at org.apache.hive.spark.client.rpc.RpcConfiguration.(RpcConfiguration.java:45)
+
+解决方法：hive spark版本要匹配，同时必须是没有-phive参数编译的spark
+
+112、javax.jdo.JDOFatalInternalException: Error creating transactional connection factory
+
+解决方法：把mysql connector加入hive的lib中
+
+113、org.apache.hadoop.hive.ql.metadata.HiveException(Failed to create spark client  FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.spark.SparkTask
+
+解决方法：原因有多种，去hive.log查看日志进一步定位问题
+
+114、Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/hadoop/fs/FSDataInputStream
+
+解决方法：编译spark用了hadoop-provided参数，导致缺少hadoop相关包
+
+115、linux 输入错误命令 按删除键显示^H
+
+解决方法：执行指令 stty erase ^H
+
+116、经验：通过hive源文件pom.xml查看适配的spark版本，只要打版本保持一致就行，例如spark1.6.0和1.6.2都能匹配
+
+ 
+117、经验：打开Hive命令行客户端，观察输出日志是否有打印“SLF4J: Found binding in [jar:file:/work/poa/hive-2.1.0-bin/lib/spark-assembly-1.6.2-hadoop2.6.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]”来判断hive有没有绑定spark
+
+ 
+118、启动yarn，发现只启动了部分Nodemanager
+
+解决方法：未启动的节点缺少yarn相关包，要保持所有节点jar包一致
+
+119、Error: Could not find or load main class org.apache.hive.beeline.BeeLine
+
+解决方法：重新编译Hive，并带上参数-Phive-thriftserver
+
+120、经验：编译spark，hive on spark就不要加-Phive参数，若需sparkSQL支持hive语法则要加-Phive参数
+
+ 
+121、User class threw exception: org.apache.spark.sql.AnalysisException: path hdfs://XXXXXX already exists.;
+
+解决方法：df.write.format("parquet").mode("append").save("path.parquet")
+
+122、check the manual that corresponds to your MySQL server version for the right syntax to use near 'OPTION SQL_SELECT_LIMIT=DEFAULT' at line 1
+
+解决方法：用新版mysql-connector
+
+123、org.apache.hadoop.ipc.RemoteException(org.apache.hadoop.security.authorize.AuthorizationException): User: root is not allowed to impersonate
+
+解决方法：vim core-site.xml,hadoop.proxyuser.root.hosts,value = *,hadoop.proxyuser.root.groups,value = *，restart yarn
+
+124、java.lang.NoSuchMethodError: org.apache.parquet.schema.Types$MessageTypeBuilder.addFields([Lorg/apache/parquet/schema/Type;)Lorg/apache/parquet/schema/Types$BaseGroupBuilder;
+
+解决方法：版本冲突所致，统一hive和spark中parquet组件版本
+
+125、经验：可以通过hive-site.xml修改spark.executor.instances、spark.executor.cores、spark.executor.memory等配置来优化hive on spark执行性能，不过最好配成动态资源分配。
+
+ 
+126、WARN SparkContext: Dynamic Allocation and num executors both set, thus dynamic allocation disabled.
+
+解决方法：如果要使用动态资源分配，就不要设置执行器个数
+
+127、Invalid configuration property node.environment: is malformed (for class io.airlift.node.NodeConfig.environment)
+
+解决方法：the node.environment property (in the node.properties file) is set but fails to match the following regular expression: [a-z0-9][_a-z0-9]*. 重新规范命名
+
+128、com.facebook.presto.server.PrestoServerNo factory for connector hive-XXXXXX
+
+解决方法：在hive.properties中 connector.name写错了，应该为指定的版本，以便于presto使用对应的适配器，修改为：connector.name=hive-hadoop2
+
+129、org.apache.spark.SparkException: Task failed while writing rows  Caused by: org.elasticsearch.hadoop.rest.EsHadoopInvalidRequest: null
+
+解决方法：ES负载过高，修复ES
+
+130、经验：如果maven下载很慢，很可能是被天朝的GFW墙了，可以在maven安装目录的setting.conf配置文件mirrors标签下加入国内镜像抵制**党的网络封锁，例如：
+
+ 
+ 
+        nexus-aliyun
+
+ 
+        *
+
+ 
+        Nexus aliyun
+
+ 
+        http://maven.aliyun.com/nexus/content/groups/public
+
+ 
+    
+131、RROR ApplicationMaster: Uncaught exception: java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
+
+解决方法：pom.xml文件中标签下加入
+
+META-INF/*.SF
+
+ 
+META-INF/*.DSA
+
+ 
+META-INF/*.RSA
+
+ 
+132、scala.MatchError: Buffer(10.113.80.29, None) (of class scala.collection.convert.Wrappers$JListWrapper)
+
+解决方法：清除ES中跟scala数据类型不兼容的脏数据
+
+133、HDFS误删文件如何恢复解决方法：core-site文件中加入
+
+ 
+ 
+     fs.trash.interval
+
+ 
+     2880
+
+ 
+     HDFS垃圾箱设置，可以恢复误删除，配置的值为分钟数，0为禁用
+
+ 
+ 
+恢复文件执行 hdfs dfs -mv  /user/root/.Trash/Current/误删文件    /原路径
+
+ 
+134、改了linux定时脚本里边部分任务顺序，导致有些任务未执行，而有些重复执行
+
+解决方法：Linux脚本修改后实时生效，务必在脚本全部执行完再修改，以免产生副作用
+
+135、经验：spark两个分区方法coalesce和repartition，前者窄依赖，分区后数据不均匀，后者宽依赖，引发shuffle操作，分区后数据均匀
+
+ 
+136、org.apache.spark.SparkException: Task failed while writing rows   scala.MatchError: Buffer(10.113.80.29, None) (of class scala.collection.convert.Wrappers$JListWrapper)
+
+解决方法：ES数据在sparksql类型转化时不兼容，可通过EsSpark.esJsonRDD以字符串形式取ES数据，再把rdd转换成dataframe
+
+137、Container exited with a non-zero exit code 143  Killed by external signal
+
+解决方法：分配的资源不够，加大内存或者调整代码，尽量避免类似JsonObject这样的大对象过度消耗内存，或者Include below properties in yarn-site.xml and restart VM,
+
+ 
+   yarn.nodemanager.vmem-check-enabled
+
+ 
+   false
+
+ 
+   Whether virtual memory limits will be enforced for containers
+
+ 
+ 
+ 
+   yarn.nodemanager.vmem-pmem-ratio
+
+ 
+   4
+
+ 
+   Ratio between virtual memory to physical memory when setting memory limits for containers
+
+ 
+ 
+138、对已有jar手动生成maven依赖
+
+解决方法：mvn install:install-file -Dfile=spark-assembly-1.6.2-hadoop2.6.0.jar -DgroupId=org.apache.repack -DartifactId=spark-assembly-1.6.2-hadoop2.6.0 -Dversion=2.6 -Dpackaging=jar
+
+139、FAILED: SemanticException [Error 10006]: Line 1:122 Partition not found ''2016-08-01''
+
+解决方法：hive版本太新，hive自身bug，把hive版本从2.1.0降到1.2.1
+
+140、ParseException line 1:17 mismatched input 'hdfs' expecting StringLiteral near 'inpath' in load statement
+
+解决方法：去掉以hdfs开头的IP端口号前缀，直接写HDFS中的绝对路径，并用单引号括起来
+
+141、[ERROR] Terminal initialization failed; falling back to unsupported  java.lang.IncompatibleClassChangeError: Found class jline.Terminal, but interface was expected解决方案：export HADOOP_USER_CLASSPATH_FIRST=true
+
+142、crontab中启动的shell脚本不能正常运行，但是使用手动执行没有问题
+
+解决方法：在脚本第一行写上source /etc/profile,因为cront进程不会自动加载用户目录下的.profile文件
+
+143、SparkListenerBus has already stopped! Dropping event SparkListenerStageCompleted
+
+解决方法：集群资源不够，确保真实剩余内存大于spark job申请的内存
+
+144、PrestoException: ROW comparison not supported for fields with null elements
+
+解决方法：把 !=null 换成 is not null
+
+145、启动presto服务器，部分节点启动不成功
+
+解决方法：JVM所分配的内存，必须小于真实剩余内存
+
+146、经验：presto进程一旦启动，JVM server会一直占用内存
+
+ 
+147、Error injecting constructor, java.lang.IllegalArgumentException: query.max-memory-per-node set to 20GB, but only 10213706957B of useable heap available
+
+解决方法：Presto will claim 0.40 * max heap size for the system pool, so your query.max-memory-per-node must not exceed this. You can increase the heap or decrease query.max-memory-per-node.
+
+148、failed: Encountered too many errors talking to a worker node. The node may have crashed or be under too much load. failed java.util.concurrent.CancellationException: Task was cancelled
+
+解决方法：such exceptions caused by timeout limits，延长等待时间，在work节点config配置中set exchange.http-client.request-timeout=50s
+
+149、大数据ETL可视化有哪些主流方案
+
+解决方法：可以考虑的技术栈有ELK(elasticsearch+logstash+kibana)或者HPA(hive+presto+airpal)
+
+150、经验：presto集群没必要采用on yarn模式，因为hadoop依赖HDFS，如果部分机器磁盘很小，HADOOP会很尴尬，而presto是纯内存计算，不依赖磁盘，独立安装可以跨越多个集群，可以说有内存的地方就可以有presto

@@ -1,0 +1,25 @@
+---
+layout:     post
+title:      "DBCP配置数据库连接乱码问题"
+date:       2016-06-30 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	MySQL DBCP
+---
+
+> “这就是我，一个低调的作者。”
+
+
+运行shell脚本提示“syntax error near unexpected token for((i=0;i<$length;i++))”：
+
+原因是因为Linux下的换行符是 \n 而你在secureCRT或者其他工具编写shell脚本的时候，使用的是window下的换行符：\r\n
+
+所以需要设置一下文件的规范：
+
+在vim的命令模式下输入：
+
+	:set fileformat=unix
+	:wq
+
+即可！

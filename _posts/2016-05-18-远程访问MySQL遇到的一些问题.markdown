@@ -1,0 +1,16 @@
+---
+layout:     post
+title:      "eclipse远程调试Hadoop"
+date:       2016-05-18 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:	MySQL
+---
+
+> “这就是我，一个低调的作者。”
+
+
+一、access deny 
+
+	GRANT ALL PRIVILEGES ON *.* TO '用户名'@'IP地址' IDENTIFIED BY '密码' with grant option;
