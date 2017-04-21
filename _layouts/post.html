@@ -62,32 +62,12 @@ layout: default
 
                 <hr style="visibility: hidden;">
 
-                {% if site.duoshuo_share && site.duoshuo_username %}
+                <!--{% if site.duoshuo_share && site.duoshuo_username %}-->
                 <!-- 多说 Share start -->
-                <div class="ds-share"
-                    style="text-align: right"
-                    data-thread-key="{{page.id}}"
-                    data-title="{{page.title}}"
-                    data-url="{{site.url}}{{site.baseurl}}{{page.url}}"
-                    data-images="{{ site.url }}{{site.baseurl}}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}"
-                    data-content="{{ content | strip_html | truncate:80 }} | {{ site.SEOTitle }} " >
-                    <div class="ds-share-inline">
-                      <style> 
-                        .ds-share-icons-16 {display:none;} 
-                      </style>
-                      <ul class="ds-share-icons-16">
-                        <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
-                        <li><a class="ds-wechat flat" href="javascript:void(0);" data-service="wechat">微信</a></li>
-                        <li><a class="ds-weibo flat" href="javascript:void(0);" data-service="weibo">微博</a></li>
-                        <li><a class="ds-douban flat" href="javascript:void(0);" data-service="douban">豆瓣</a></li>
-                      </ul>
-                      <div class="ds-share-icons-more">
-                      </div>
-                    </div>
-                <hr>
-                </div>
+                <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["weixin","tsina","qzone","tqq","renren"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["weixin","tsina","qzone","tqq","renren"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
                 <!-- 多说 Share end-->
-                {% endif %}
+                <!--{% endif %}-->
 
 
                 <ul class="pager">
@@ -110,26 +90,31 @@ layout: default
                 </ul>
 
 
-                {% if site.duoshuo_username %}
+                <!--{% if site.duoshuo_username %}-->
                 <!-- 多说评论框 start -->
-                <div class="comment">
+                <!--<div class="comment">
                     <div class="ds-thread"
                         data-thread-key="{{page.id}}"
                         data-title="{{page.title}}"
                         data-url="{{site.url}}{{site.baseurl}}{{page.url}}" >
                     </div>
-                </div>
+                </div>-->
                 <!-- 多说评论框 end -->
-                {% endif %}
+                <!--{% endif %}-->
 
-                {% if site.disqus_username %}
-                <!-- disqus 评论框 start -->
-                <div class="comment">
+                <!--{% if site.disqus_username %}-->
+                <!-- disqus 评论框 start -->-->
+                <!--<div class="comment">
                     <div id="disqus_thread" class="disqus-thread"></div>
-                </div>
+                </div>-->
                 <!-- disqus 评论框 end -->
-                {% endif %}
+                <!--{% endif %}-->
 
+				<!-- UY BEGIN -->
+				<div id="uyan_frame"></div>
+				<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js"></script>
+				<!-- UY END -->
+				
             </div>  
 
     <!-- Side Catalog Container -->
