@@ -1,11 +1,11 @@
 ---
 layout:     post
-title:      "大数据常见错误解决方案（转载）"
+title:      "Java开发中各种集合框架简介"
 date:       2017-02-24 12:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
-tags:	大数据 常见错误 解决方案
+tags: Java 集合框架
 ---
 
 > “这就是我，一个低调的作者。”
