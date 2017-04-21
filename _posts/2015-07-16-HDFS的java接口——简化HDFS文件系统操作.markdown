@@ -14,43 +14,43 @@ tags:	技术 Linux
 
 今天闲来无事，于是把HDFS的基本操作用java写出简化程序出来给大家一些小小帮助！
 {% highlight java %}
-package com.quanttech;
+	package com.quanttech;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+	import org.apache.hadoop.conf.Configuration;
+	import org.apache.hadoop.fs.FileSystem;
+	import org.apache.hadoop.fs.Path;
 
-/**
- * @topic HDFS文件操作工具类
- * @author ZhouJ
- *
- */
-public class HdfsUtils {
-
-	/*
-	 * 判断HDFS目录是否存在路径path
+	/**
+	 * @topic HDFS文件操作工具类
+	 * @author ZhouJ
+	 *
 	 */
-	public static boolean isExists(Configuration conf, String path) throws Exception {
-		FileSystem fs = FileSystem.get(conf);
-		return fs.exists(new Path(path));
-	}
+	public class HdfsUtils {
 
-	/*
-	 * 删除HDFS的一个目录或者文件
-	 */
-	public static void Delete(Configuration conf, String path) throws Exception {
-		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path(path), true);
-	}
+		/*
+		 * 判断HDFS目录是否存在路径path
+		 */
+		public static boolean isExists(Configuration conf, String path) throws Exception {
+			FileSystem fs = FileSystem.get(conf);
+			return fs.exists(new Path(path));
+		}
 
-	/*
-	 * 创建一个HDFS目录
-	 */
-	public static void Mkdir(Configuration conf, String path) throws Exception {
-		FileSystem fs = FileSystem.get(conf);
-		if(fs.mkdirs(new Path(path))){
-			System.out.println("HDFS目录："+path+"创建成功！");
+		/*
+		 * 删除HDFS的一个目录或者文件
+		 */
+		public static void Delete(Configuration conf, String path) throws Exception {
+			FileSystem fs = FileSystem.get(conf);
+			fs.delete(new Path(path), true);
+		}
+
+		/*
+		 * 创建一个HDFS目录
+		 */
+		public static void Mkdir(Configuration conf, String path) throws Exception {
+			FileSystem fs = FileSystem.get(conf);
+			if(fs.mkdirs(new Path(path))){
+				System.out.println("HDFS目录："+path+"创建成功！");
+			}
 		}
 	}
-}
 {% endhighlight %}
