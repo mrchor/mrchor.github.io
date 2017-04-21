@@ -110,6 +110,7 @@ ssh需要配置成为免密码登录状态
 	gedit hadoop-env.sh
 	
 {% endhighlight %}
+
 ![](http://images.cnitblog.com/blog/656602/201411/141455560063769.jpg)
 ## 3、修改hadoop核心配置文件core-site.xml
 {% highlight shell %}
@@ -175,14 +176,18 @@ ssh需要配置成为免密码登录状态
 	bin/hadoop namenode –format
 	
 {% endhighlight %}
+
 ![](http://images.cnitblog.com/blog/656602/201411/141457218199518.jpg)
+
 ## 2、启动hadoop环境
 {% highlight shell %}
 
 	bin/start-all.sh
 	
 {% endhighlight %}	
+
 ![](http://images.cnitblog.com/blog/656602/201411/141457331479213.jpg)
+
 # 五、验证
 需要在浏览器中输入localhost：50030和localhost：50070验证hadoop是否安装完成
 ![](http://images.cnitblog.com/blog/656602/201411/141457485065138.jpg)
