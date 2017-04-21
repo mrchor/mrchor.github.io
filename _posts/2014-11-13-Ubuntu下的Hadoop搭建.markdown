@@ -135,6 +135,7 @@ ssh需要配置成为免密码登录状态
 	gedit hdfs-site.xml
 	
 {% endhighlight %}
+
 {% highlight xml %}	
 
 	<configuration>
