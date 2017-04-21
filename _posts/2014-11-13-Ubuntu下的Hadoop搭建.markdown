@@ -118,6 +118,7 @@ ssh需要配置成为免密码登录状态
 	gedit core-site.xml
 	
 {% endhighlight %}
+
 {% highlight xml %}
 
 	<configuration>
@@ -128,7 +129,9 @@ ssh需要配置成为免密码登录状态
 	</configuration>
 	
 {% endhighlight %}
+
 ![](http://images.cnitblog.com/blog/656602/201411/141456140066867.jpg)
+
 ## 4、修改hadoop中HDFS的配置，修改replication
 {% highlight shell %}
 
@@ -150,13 +153,16 @@ ssh需要配置成为免密码登录状态
 	</configuration>
 	
 {% endhighlight %}
+
 ![](http://images.cnitblog.com/blog/656602/201411/141500502728402.jpg)
+
 ## 5、修改hadoop中MapReduce的配置文件，配置的是JobTracker的地址和端口
 {% highlight shell %}
 
 	gedit mapred-site.xml
 	
 {% endhighlight %}
+
 {% highlight shell %}
 
 	<configuration>
@@ -167,11 +173,14 @@ ssh需要配置成为免密码登录状态
 	</configuration>
 	
 {% endhighlight %}
+
 ![](http://images.cnitblog.com/blog/656602/201411/141501126006289.jpg)
+
 # 四、hadoop的启动
 以下操作在hadoop-0.20.2文件夹下进行，在命令行输入：cd hadoop-0.20.2
 
 ## 1、格式化hadoop中的文件系统HDFS
+
 {% highlight shell %}
 
 	bin/hadoop namenode –format
@@ -181,6 +190,7 @@ ssh需要配置成为免密码登录状态
 ![](http://images.cnitblog.com/blog/656602/201411/141457218199518.jpg)
 
 ## 2、启动hadoop环境
+
 {% highlight shell %}
 
 	bin/start-all.sh
@@ -188,6 +198,7 @@ ssh需要配置成为免密码登录状态
 {% endhighlight %}	
 
 ![](http://images.cnitblog.com/blog/656602/201411/141457331479213.jpg)
+
 
 # 五、验证
 需要在浏览器中输入localhost：50030和localhost：50070验证hadoop是否安装完成
