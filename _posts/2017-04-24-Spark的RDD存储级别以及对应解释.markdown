@@ -1,3 +1,14 @@
+---
+layout:     post
+title:      "Spark的RDD存储级别以及对应解释"
+date:       2017-04-21 12:00:00
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags:
+    - Spark
+---
+
 存储级别 | 解释
 ___ | ___
 MEMORY_ONLY | 默认选项，RDD的（分区）数据直接以Java对象的形式存储于JVM的内存中，如果内存空间不足，某些分区的数据将不会被缓存，需要在使用的时候根据世代信息重新计算。
