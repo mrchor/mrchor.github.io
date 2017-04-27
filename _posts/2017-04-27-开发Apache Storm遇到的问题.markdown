@@ -72,4 +72,24 @@ declare的Field数量 等于 collector.emit数量
 
 PS：上述这个问题的原因，也有可能是因为引入的jar包版本的问题导致，需要找到对应版本的jar，如果在maven上没有的话，还需要自行下载，然后按照上面给出的步骤安装到本地maven仓库~
 
+## 五、看起来代码都很正常，但是bolt无法emit数据到下一个bolt
 
+这个可能是因为你写的collector变量名不对，我就遇到了这样的坑，原本我定义了_collector，prepare方法中这么写：
+
+{% highlight java %}
+    @Override
+    public void prepare(Map stormConf, TopologyContext context,
+    		OutputCollector collector) {
+    	this._collector = collector;
+    }
+{% endhighlight %}
+
+但是，请注意，这里由于Clojure这门语言我不是很了解，我认为是可能带有_的变量，加上this会有问题，因此，我重新定义了collector，上述代码也变成了：
+
+{% highlight java %}
+    @Override
+    public void prepare(Map stormConf, TopologyContext context,
+    		OutputCollector collector) {
+    	this.collector = collector;
+    }
+{% endhighlight %}
