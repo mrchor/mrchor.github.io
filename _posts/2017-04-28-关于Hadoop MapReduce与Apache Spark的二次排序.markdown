@@ -192,46 +192,6 @@ tags: MapReduce Spark 二次排序
 首先，我们先实现一遍简单的二次排序，即先按照年份分组，然后在组内利用一个集合进行排序：
 
 {% highlight scala %}
-import org.apache.spark.{SparkConf, SparkContext}
-
-    import scala.collection.mutable.ListBuffer
-    
-    /**
-      * Created by zhoujie on 2017/4/19.
-      */
-    object PartitionTest {
-      val TAB: String = "\t"
-    
-      def main(args: Array[String]): Unit = {
-        val conf: SparkConf = new SparkConf().setAppName("PartitionerTest").setMaster("local")
-        val sc: SparkContext = new SparkContext(conf)
-        sc.textFile(args(0))
-          .map(line => {
-            val splited: Array[String] = line.split(TAB, -1)
-            (splited(1), splited(0) + TAB + splited(2))
-          })
-          .groupByKey()
-          .sortByKey(true)
-          .map(iter => {
-            (iter._1, iter._2.toList.sortWith((x, y) => {
-              val f: Int = x.split(TAB)(0).compareTo(y.split(TAB)(0))
-              if(f>=0){
-                true
-              }else{
-                false
-              }
-            }))
-          })
-          .saveAsTextFile(args(1))
-      }
-    }
-{% endhighlight %}
-
-但是，跟MapReduce一样，上述的二次排序还是存在OOM的问题，因此，我们还是需要自定义一些排序规则，形成改进型的二次排序：
-
-首先，也需要自定义一个排序类：
-
-{% highlight scala %}
     /**
       * Created by zhoujie on 2017/4/28.
       */
@@ -243,7 +203,7 @@ import org.apache.spark.{SparkConf, SparkContext}
           this.id.compareTo(that.id)
         }
       }
-    
+    /*
       override def <(that: SecondarySortKey): Boolean = {
         if (this.text.compareTo(that.text) < 0) {
           true
@@ -276,19 +236,19 @@ import org.apache.spark.{SparkConf, SparkContext}
         }else{
           false
         }
-      }
+      }*/
     
       override def toString: String = {
         "[" + this.text + "," + this.id + "]"
       }
     
-      override def compareTo(that: SecondarySortKey): Int = {
+      /*override def compareTo(that: SecondarySortKey): Int = {
         if(!this.text.equals(that.text)){
           this.text.compareTo(that.text)
         }else{
           this.id.compareTo(that.id)
         }
-      }
+      }*/
     }
 {% endhighlight %}
 
