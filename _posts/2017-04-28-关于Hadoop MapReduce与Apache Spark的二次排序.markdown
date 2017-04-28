@@ -235,13 +235,49 @@ import org.apache.spark.{SparkConf, SparkContext}
     /**
       * Created by zhoujie on 2017/4/28.
       */
-    class SecondarySortKey(val text: String, val id: String) extends Ordered[SecondarySortKey] with Serializable{
+    class SecondarySortKey(val text: String, val id: String) extends Ordered[SecondarySortKey] with Serializable {
       override def compare(that: SecondarySortKey): Int = {
-        if(!this.text.equals(that.text)){
+        if (!this.text.equals(that.text)) {
           this.text.compareTo(that.text)
-        }else{
+        } else {
           this.id.compareTo(that.id)
         }
+      }
+    
+      override def <(that: SecondarySortKey): Boolean = {
+        if (this.text.compareTo(that.text) < 0) {
+          true
+        } else {
+          false
+        }
+      }
+    
+      override def >(that: SecondarySortKey): Boolean = {
+        if (this.text.compareTo(that.text) > 0) {
+          true
+        } else {
+          false
+        }
+      }
+    
+      override def <=(that: SecondarySortKey): Boolean = {
+        if (this.text.equals(that.text) && this.id.compareTo(that.id) < 0) {
+          true
+        } else {
+          false
+        }
+      }
+    
+      override def >=(that: SecondarySortKey): Boolean = {
+        if (this.text.equals(that.text) && this.id.compareTo(that.id) > 0) {
+          true
+        } else {
+          false
+        }
+      }
+    
+      override def toString: String = {
+        "[" + this.text + "," + this.id + "]"
       }
     }
 {% endhighlight %}
