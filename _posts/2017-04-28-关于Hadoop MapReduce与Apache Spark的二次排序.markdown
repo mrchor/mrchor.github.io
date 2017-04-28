@@ -261,23 +261,33 @@ import org.apache.spark.{SparkConf, SparkContext}
       }
     
       override def <=(that: SecondarySortKey): Boolean = {
-        if (this.text.equals(that.text) && this.id.compareTo(that.id) < 0) {
+        if(this < that){
           true
-        } else {
+        }else if(this.text.equals(that.text) && this.id.equals(that.id)){
+          true
+        }else{
           false
         }
       }
     
       override def >=(that: SecondarySortKey): Boolean = {
-        if (this.text.equals(that.text) && this.id.compareTo(that.id) > 0) {
+        if(this > that){
           true
-        } else {
+        }else{
           false
         }
       }
     
       override def toString: String = {
         "[" + this.text + "," + this.id + "]"
+      }
+    
+      override def compareTo(that: SecondarySortKey): Int = {
+        if(!this.text.equals(that.text)){
+          this.text.compareTo(that.text)
+        }else{
+          this.id.compareTo(that.id)
+        }
       }
     }
 {% endhighlight %}
