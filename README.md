@@ -1,6 +1,6 @@
-低调才是王道 | mrchor | [晉國傑少](http://weibo.com/2387356822?_blank) | Mrchor
+低调才是王道 | mrchor | <a href="http://weibo.com/2387356822">晉國傑少</a> | Mrchor
 ===
-这是一个我自己的博客主页代码，网页是通过网上借鉴别人的模板做的。其中的网站分析统计用的是[百度分析](https://tongji.baidu.com?_blank)，评论系统用的是[友言](http://www.uyan.cc?_blank)
+这是一个我自己的博客主页代码，网页是通过网上借鉴别人的模板做的。其中的网站分析统计用的是<a href="https://tongji.baidu.com?_blank">百度分析</a>，评论系统用的是<a href="http://www.uyan.cc?_blank">友言</a>
 
 里面有分享一些我的学习、工作和生活。
 以前是在博客园上写，但是最近转到了GitHub，还有很多不懂的，希望有大神们带带。
