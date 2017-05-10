@@ -43,5 +43,21 @@ Scala确实没有上述两个关键字，但是在类scala.util.control.Breaks�
 
 上述代码的意思是当i等于4时，跳出本次循环。具体过程跟break的过程一样。
 
-#### 总结
+#### 升级
+肯定有小伙伴在想，Scala是否可以像Java一样可以内外多层跳出代码块，答案是肯定的：
+
+{% highlight scala %}
+    out.breakable{
+        for(i <- 1 to 10){
+            in.breakable{
+                if(i == 4) in.break//跳出内层本次循环
+                if(i == 5) out.break//跳出外层循环
+                println(i)
+
+if(i == 4) in.break//跳出循环            }
+        }
+    }
+{% endhighlight %}
+
+## 总结
 从这两段代码，我们可以发现，当跳出的条件成立时候，break方法跳出的就是breakable{//代码块}中的花括号，所以只需要记住这一点，你就可以很轻松地玩转Scala的break和continue了。
