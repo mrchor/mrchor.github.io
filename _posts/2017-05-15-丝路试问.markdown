@@ -15,9 +15,9 @@ tags: 诗词 生活
 
 
 
-<center><font face="华为行楷" size=8>京城晴是艳阳天，</font></center >
-<center><font face="华为行楷" size=8>只因丝路举盛筵；</font></center >
-<center><font face="华为行楷" size=8>若无国是在此举，</font></center >
-<center><font face="华为行楷" size=8>又至何时再应景？</font></center >
-<p align="right">2017年5月15日中午&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p> 
-<p align="right"> 于北京联合大学研究生宿舍503</p>
+<p align="center">京城晴是艳阳天，</p>
+<p align="center">只因丝路举盛筵；</p>
+<p align="center">若无国是在此举，</p>
+<p align="center">又至何时再应景？</p>
+<p align="right">2017年5月15日中午&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+于北京联合大学研究生宿舍503</p>
