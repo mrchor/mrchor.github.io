@@ -1,0 +1,23 @@
+---
+layout:     post
+title:      "丝路试问"
+date:      2017-5-15 12:07:24
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags: 诗词 生活
+---
+
+> “这就是我，一个低调的作者。”
+
+
+
+
+
+
+<p align="center">京城晴是艳阳天，</p>
+<p align="center">只因丝路举盛筵；</p>
+<p align="center">若无国是在此举，</p>
+<p align="center">又至何时再应景？</p>
+<p align="right">2017年5月15日中午&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+于北京联合大学研究生宿舍503</p>
