@@ -1,0 +1,30 @@
+---
+layout:     post
+title:      "expect切换用户执行命令技巧"
+date:       2017-6-25 21:30:56
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags: 技术 shell expect
+---
+
+> “这就是我，一个低调的作者。”
+
+
+在生产中，我们会经常在当前用户下执行完某一部分脚本后，需要在其他用户下执行一些脚本代码来辅助当前用户的一些操作，这是就需要用到expect来完成了。以下是我设置的一个场景：
+假设在A用户下执行完MR作业，需要在B用户将MR的执行结果发送到某个网络文件夹，那就需要这么做：
+
+{% highlight scala %}
+	#!/usr/bin/expect  -f
+	set timeout -1
+	set day [lindex $argv 2]
+	spawn su datapf
+	expect -re ".*密码.*"
+	send "datapf\n"
+	expect -re ".*"
+	send "sh  /home/datapf/ddclick_datapf_new/app_department_all/job_bd.sh a b $day \n"                                                                          
+	send "exit\n"
+	expect eof
+{% endhightlight %}
+
+
