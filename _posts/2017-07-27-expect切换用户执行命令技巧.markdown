@@ -25,6 +25,6 @@ tags: 技术 shell expect
 	send "sh  /home/datapf/ddclick_datapf_new/app_department_all/job_bd.sh a b $day \n"                                                                          
 	send "exit\n"
 	expect eof
-{% endhightlight %}
+{% endhighlight %}
 
 
