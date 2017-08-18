@@ -1,7 +1,94 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-		<embed src="https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/music.asx"loop=&q ... l"width="0"height="0"><!-- 背景音乐-->
+				<audio id="myaudio" type="audio/mpeg" loop="-1" autoplay="autoplay">
+				<!--<source src="/music/南征北战 - 我的天空 (伴奏).mp3" type="audio/mpeg">
+				<source src="/music/贾跃亭 - 野子.mp3" type="audio/mpeg">
+				<source src="/music/柳妍熙 - 谁记得.mp3" type="audio/mpeg">
+				<source src="/music/区文诗 - 不只爱情.mp3" type="audio/mpeg">-->
+				</audio>
+				<script>
+        var mp3List = []
+		 var ua = navigator.userAgent;
+		 var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+		 isIphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+		 isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+		 isMobile = isIphone || isAndroid;
+		 baseUrl = '';
+		 //判断是否为手机
+    if(isMobile) {//是手机
+         mp3List = []
+    }else {//不是手机
+      
+    mp3List	= [
+                //'野子.mp3',
+                //'我的天空.mp3',
+                //'谁记得.mp3',
+                //'不只爱情.mp3'
+				'https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/不只爱情.mp3',
+				'https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/我的天空.mp3',
+				'https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/谁记得.mp3',
+				'https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/我的天空(电影《青春派》主题曲).mp3',
+				'https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/小幸运.mp3',
+				'https://raw.githubusercontent.com/mrchor/mrchor.github.io/master/music/野子.mp3'
+                ],
+            //文件路径
+            //baseUrl = 'music/';
+			baseUrl = '';
+			}
+            
+         
+        function getMusic(list) {
+            var len = list.length,
+                num = parseInt(Math.random()*len, 10),
+                music = baseUrl + list[num];    
+            if(music) {
+                return music;    
+            } else {         
+                getMusic(list, baseUrl);
+            }   
+        }
+        canPlay(playAudio);
+        //查看是否支持audio标签，如果支持，预加载当前指向mp3文件
+        function canPlay(callback) {            
+            var currentFile = getMusic(mp3List);
+            try {
+                var audio = new Audio(); 
+                audio.oncanplay = function() {
+                    callback(currentFile);
+                }
+                audio.src = currentFile;  
+                audio.load();
+            }catch(e){
+                    callback(false, e);
+            }
+        }
+         
+        //play
+        function playAudio(currentFile) {
+            // Check for audio element support.
+            if (window.HTMLAudioElement && currentFile) {
+                try {
+                    var oAudio = document.getElementById('myaudio');
+                    oAudio.src = currentFile;
+                    if (oAudio.paused) {
+                        oAudio.play();
+                    }
+                    else {
+                        oAudio.pause();
+                    }
+                    oAudio.onended = function() {
+                        oAudio.src = getMusic(mp3List);
+                        oAudio.play();
+                    }
+                }
+                catch (e) {
+                    // Fail silently but show in F12 developer tools console
+                     if(window.console && console.error("Error:" + e));
+                }
+            }
+        }
+		</script>
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <ul class="list-inline text-center">
