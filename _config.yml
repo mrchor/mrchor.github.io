@@ -4,7 +4,7 @@ SEOTitle: 低调才是王道 | Mrchor Blog
 header-img: img/home-bg.jpg
 email: Mrchorpro@gmail.com
 description: "数据在手，天下我有！ | The data in hand, the world in here! | 这就是我，一个低调的过客！"
-keyword: "低调才是王道, Mrchor, 晋国杰少, 个人网站, 互联网, 大数据, 晉國傑少的微博, 机器学习, 推荐算法, @晉國傑少, 博客, Hadoop, Spark"
+keyword: "低调才是王道, Mrchor, 晋国杰少, 个人网站, 互联网, 大数据, 晉國傑少的微博, 机器学习, 深度学习, 神经网络, 数据挖掘, 推荐算法, @晉國傑少, 博客, Hadoop, Spark, TensorFlow"
 url: "https://mrchor.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
