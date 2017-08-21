@@ -1,0 +1,32 @@
+---
+layout:     post
+title:      "减河晨游记"
+date:       2017-8-19 8:31:27
+author:     "Mrchor"
+header-img: "img/post-bg-2015.jpg"
+catalog:	true
+tags: 技术 shell expect
+---
+
+> “这就是我，一个低调的作者。”
+
+
+<p align="center">夏日已过秋时爽，</p>
+<p align="center">青青草地渐日黄；</p>
+<p align="center">不吝远目尚晨光，</p>
+<p align="center">待到彼时已重阳。</p>
+<p align="right">2017年8月19日上午&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+于北京顺义区减河公园</p>
+
+<p>下附图：</p>
+
+![](/img/2017-08-19/1.jpg)
+
+![](/img/2017-08-19/2.jpg)
+
+![](/img/2017-08-19/3.jpg)
+
+![](/img/2017-08-19/4.jpg)
+
+![](/img/2017-08-19/5.jpg)
+
