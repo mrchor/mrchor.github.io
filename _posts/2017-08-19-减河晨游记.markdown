@@ -13,7 +13,7 @@ tags: 技术 shell expect
 
 <p align="center">夏日已过秋时爽，</p>
 <p align="center">青青草地渐日黄；</p>
-<p align="center">不吝远目尚晨光，</p>
+<p align="center">不吝远目赏晨光，</p>
 <p align="center">待到彼时已重阳。</p>
 <p align="right">2017年8月19日上午&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 于北京顺义区减河公园</p>
