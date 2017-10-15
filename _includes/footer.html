@@ -3,6 +3,7 @@
     <div class="container">
 				<audio id="myaudio" type="audio/mpeg" loop="-1" autoplay="autoplay"></audio>
 				<script>
+				document.getElementById("myaudio").volume = 0.5;
         var mp3List = []
 		 var ua = navigator.userAgent;
 		 var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
