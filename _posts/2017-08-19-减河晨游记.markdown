@@ -5,7 +5,7 @@ date:       2017-8-19 8:31:27
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
-tags: 技术 shell expect
+tags: 诗词 文学
 ---
 
 > “这就是我，一个低调的作者。”
