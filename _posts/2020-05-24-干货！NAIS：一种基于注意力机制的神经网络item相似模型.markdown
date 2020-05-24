@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "干货！NAIS：一种基于注意力机制的神经网络item相似模型"
-date:       2020-5-17 21:56:59
+date:       2020-5-24 08:00:00
 author:     "Mrchor"
 header-img: "img/post-bg-2015.jpg"
 catalog:	true
